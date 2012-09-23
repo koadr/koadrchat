@@ -1,0 +1,1 @@
+class Interact.Models.Message extends Backbone.Model

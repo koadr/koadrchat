@@ -1,0 +1,13 @@
+extends ../../../views/layout
+
+
+block content
+  .six.columns.centered
+    form(action='/login', method='post')
+      fieldset.form_container.vertical_center
+        h2 Login
+        label Name
+        input.ten(type='text',placeholder='User Name' , name='user')
+        label Password
+        input.ten(type='password', name='password')
+        input(type='submit', class="centered button medium radius", value= "Log In" )

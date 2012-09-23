@@ -1,0 +1,17 @@
+doctype 5
+html
+  head
+    title= title
+    script(type='text/javascript', src='//use.typekit.net/kpx0iyb.js')
+    script(type='text/javascript')
+        try{Typekit.load();}catch(e){}
+    != css('application')
+  body
+    .row
+      include _nav
+    include _full_messages
+    .row
+      block content
+
+  != js('application')
+  script(src='/socket.io/socket.io.js')

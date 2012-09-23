@@ -1,0 +1,1 @@
+class Interact.Models.User extends Backbone.Model

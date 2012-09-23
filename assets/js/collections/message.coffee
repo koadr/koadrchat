@@ -1,0 +1,1 @@
+class Interact.Collections.Message extends Backbone.Collection

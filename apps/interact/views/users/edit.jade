@@ -1,0 +1,17 @@
+extends ../../../../views/layout
+
+block content
+  .seven.columns.centered
+    form(action="/users/#{user.user_name}", method="POST")
+      input(type="hidden" , name="user" , value= user.user_name)
+      input(type="hidden", name="_method", value="put")
+      fieldset.form_container.vertical_center
+        h2 Login Info
+        label Email
+        input.ten(type='text', name='email')
+          = user.email
+        label Password
+        input.ten(type='password' , name='password')
+        label Password Confirmation
+        input.ten(type='password' , name='password_confirmation')
+        input(type='submit', class="button medium radius", value= "Submit" )

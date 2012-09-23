@@ -1,0 +1,142 @@
+@import "foundation.min.css"
+
+// Variables
+
+black                 = #000000
+body_background_color = #f16651
+error_message_color   = #C60F13
+h2_size               = 40px
+h3_size               = 2em
+form_color            = #383838
+success_message_color = #00AFF0
+white                 = #ffffff
+
+
+// Functions and Mixins
+
+border_radius(radius = 1px)
+  border-radius         radius
+  -webkit-border-radius radius
+  -moz-border-radius    radius
+
+form_padding(arguments)
+  padding arguments
+
+form_border(arguments)
+  border arguments
+
+generic_font_family()
+  font-family "ff-enzo-web" , Helvetica, sans-serif
+
+body
+  background-color body_background_color
+  generic_font_family()
+
+
+.form_container
+  border_radius 12px
+  background-color form_color
+  form_border solid 1px black
+  padding 20px 20px 20px 80px
+
+h1, h2, h3, h4, h5, h6
+  color white
+  font-weight normal
+  generic_font_family()
+
+h2
+  font-size h2_size
+
+h3
+  font-size h3_size
+  font-weight 600
+
+label
+  font-size: 14px
+  color: #92a4ac
+  font-weight: 500
+
+.top-bar
+  border-bottom none
+  height 45px
+  line-height 45px
+  margin 0 0 30px
+  padding 0
+  width 100%
+
+  ul li
+    float left
+    list-style none
+
+    a
+      color white
+      display block
+      font-size 21px
+      font-weight normal
+      height 45px
+      line-height 45px
+      padding 0 15px
+
+
+.tagline
+  text-align center
+  line-height 1.25
+  margin 0 0 110px
+  font-weight 200
+  font-size 3.50em
+  padding-top 50px
+  color #191d1c
+
+.green_background
+  background-color #99d999
+  font-weight normal
+  border_radius 4px
+
+.yellow_background
+  background-color  #fff081
+  font-weight normal
+  border_radius 4px
+
+.center_text
+  text-align center
+
+// Flash Messages
+
+.full_message
+  display block
+  padding 6px 7px 7px 7px
+  font-weight 600
+  font-size 19px
+  color white
+  border 1px solid rgba(0, 0, 0, 0.1)
+  margin-bottom 12px
+  text-shadow 0 -1px rgba(0, 0, 0, 0.3)
+  position relative
+
+.info
+  background-color success_message_color
+  color white
+  // @extend .full_message
+  text-shadow 0 -1px rgba(0, 0, 0, 0.3)
+
+.error
+  background-color error_message_color
+  // @extend .full_message
+  color white
+  text-shadow 0 -1px rgba(0, 0, 0, 0.3)
+
+
+// Homepage
+
+.homepage_info
+  img
+    display block
+    margin auto
+
+  p
+    text-align center
+    padding-top 12px
+    font-family "Verdana"
+    color #191d1c
+    font-weight 200
+    font-size 20px

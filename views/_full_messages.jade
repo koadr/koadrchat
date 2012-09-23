@@ -1,0 +1,5 @@
+- var flashTypes = ['info' , 'error']
+  each flashType in flashTypes
+    if flash[flashType]
+      .flash(class=flashType)
+        = flash[flashType]

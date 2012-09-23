@@ -1,0 +1,16 @@
+extends ../../../views/layout
+
+block content
+  .seven.columns.centered
+    form(action='/register', method='post')
+      fieldset.form_container.vertical_center
+        h2 Sign Up
+        label User Name
+        input.ten(type='text',placeholder='User Name' , name='user')
+        label Email
+        input.ten(type='text',placeholder='Johndoe@Johndoe.com' , name='email')
+        label Password
+        input.ten(type='password' , name='password')
+        label Password Confirmation
+        input.ten(type='password' , name='password_confirmation')
+        input(type='submit', class="button medium radius", value= "Register" )
