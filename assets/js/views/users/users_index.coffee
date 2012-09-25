@@ -4,7 +4,7 @@ class Interact.Views.UsersIndex extends Backbone.View
 
   initalize: ->
 
-  template: JST["users/index"]()
+  template: jade.templates["users_index"]()
 
   render: ->
     $(@el).html(@template)

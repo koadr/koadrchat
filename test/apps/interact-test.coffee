@@ -164,6 +164,22 @@ describe 'interact' , ->
           expect(_response.request.uri.path).to.eql "/users/#{user.user_name}/edit"
           done()
 
+  describe 'api/GET' , ->
+    user  = null
+    before (done) ->
+      user = UserFactory.build 'user'
+      user.save()
+      options = inputs_for_login_form "#{user.user_name}" , 'foobar'
+      request.post options, (ignoreErr, postResponse, postResponseBody) ->
+        request.get "http:" + postResponse.headers.location, (err, _response, _body) ->
+          done()
+    it "returns json data" , (done) ->
+      request "http://localhost:3000/api/users", (err, _response, _body) ->
+        content_type = (_response.headers['content-type'].split ';')[0]
+        expect(content_type).to.eql 'application/json'
+        done()
+
+
   describe '404', ->
     [ body, response, user ] = [ null , null , null ]
     before (done) ->

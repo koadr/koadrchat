@@ -98,9 +98,19 @@ routes = (app, mongoose, db) ->
           title: 'Koadrchat - Talk Away'
           user: user
 
+  app.namespace '/api' , ->
+
+    app.get '/users', (req, res) ->
+      User
+        .find()
+        .select('user_name email')
+        .exec (err, all_users) ->
+          res.send(all_users)
+
   # # 404
   # app.get '*', (req, res) ->
   #   res.send('what???', 404)
+
 
 
 module.exports = routes

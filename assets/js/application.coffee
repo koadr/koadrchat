@@ -9,34 +9,34 @@
 #=require_tree ./collections
 #=require_tree ./views
 
-jQuery ->
+# jQuery ->
 
-  log_chat_message = (message, type) ->
-    li = jQuery("<li />").text(message)
-    if type is "system"
-      li.css "font-weight": "bold"
-    else if type is "leave"
-      li.css
-        "font-weight": "bold"
-        color: "#F00"
+#   log_chat_message = (message, type) ->
+#     li = jQuery("<li />").text(message)
+#     if type is "system"
+#       li.css "font-weight": "bold"
+#     else if type is "leave"
+#       li.css
+#         "font-weight": "bold"
+#         color: "#F00"
 
-    jQuery("#chat_log").append li
+#     jQuery("#chat_log").append li
 
 
-  socket = io.connect "/"
+#   socket = io.connect "/"
 
-  socket.on "entrance", (data) ->
-    log_chat_message data.message, "system"
+#   socket.on "entrance", (data) ->
+#     log_chat_message data.message, "system"
 
-  socket.on "exit", (data) ->
-    log_chat_message data.message, "leave"
+#   socket.on "exit", (data) ->
+#     log_chat_message data.message, "leave"
 
-  socket.on "chat", (data) ->
-    log_chat_message data.message, "normal"
+#   socket.on "chat", (data) ->
+#     log_chat_message data.message, "normal"
 
-  jQuery("#chat_box").keypress (event) ->
-    if event.which is 13
-      socket.emit "chat",
-        message: jQuery("#chat_box").val()
+#   jQuery("#chat_box").keypress (event) ->
+#     if event.which is 13
+#       socket.emit "chat",
+#         message: jQuery("#chat_box").val()
 
-      jQuery("#chat_box").val ""
+#       jQuery("#chat_box").val ""
