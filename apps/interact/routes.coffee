@@ -50,7 +50,7 @@ routes = (app, mongoose, db) ->
     app.get '/', (req, res) ->
        User
         .find()
-        .select('user_name email')
+        .select('user_name  online email')
         .exec (err, all_users) ->
           res.render "#{ __dirname}/views/users/index",
             title: 'Koadrchat - Talk Away'
@@ -103,9 +103,24 @@ routes = (app, mongoose, db) ->
     app.get '/users', (req, res) ->
       User
         .find()
-        .select('user_name email')
+        .select('user_name online email')
         .exec (err, all_users) ->
           res.send(all_users)
+
+    app.get '/users/:id' ,(req, res) ->
+       User
+        .find({ user_name: req.params.id })
+        .select('user_name online email messages')
+        .exec (err, user_arr) ->
+          user = user_arr[0]
+          res.json user
+
+    app.put '/users/:id' , (req, res) ->
+      User.find { user_name : req.params.id } , (err, user_arr) ->
+        user = user_arr[0]
+        user.save (err, user) ->
+          res.json user
+
 
   # # 404
   # app.get '*', (req, res) ->

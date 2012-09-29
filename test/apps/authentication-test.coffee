@@ -47,10 +47,11 @@ describe "authentication", ->
   describe "GET /login", ->
     body = null
     before (done) ->
-      request.del logout(), (err, _response, _body) ->
-        request {uri:"http://localhost:#{app.get('port')}/login"}, (err, response, _body) ->
-          body = _body
-          done()
+      j = request.jar()
+      request = request.defaults({jar:j})
+      request {uri:"http://localhost:#{app.get('port')}/login"}, (err, response, _body) ->
+        body = _body
+        done()
     it "has title", ->
       assert.hasTag body, '//head/title', 'Login'
     it "has a user field", ->
@@ -91,13 +92,17 @@ describe "authentication", ->
       before (done) ->
         user = UserFactory.build 'user'
         user.save( { safe: true } )
-        options = inputs_for_login_form 'Default_User27' , 'foobar'
+        options = inputs_for_login_form "#{user.user_name}" , 'foobar'
         request.post options, (ignoreErr, postResponse, postResponseBody) ->
           request.get "http:" + postResponse.headers.location, (err, _response, _body) ->
             [body, response] = [_body, _response]
             done()
+      it "registers user as online", (done) ->
+        User.find (err, users) ->
+          expect(users[0].online).to.be true
+          done()
       it "shows flash message for correct login", ->
-        flashText = "Welcome back Default_User27!!!"
+        flashText = "Welcome back #{user.user_name}!!!"
         assert.hasTag body, "//div[@class='flash info']", flashText
       it "redirects to homepage if user is already logged in", (done) ->
         request {uri:"http://localhost:#{app.get('port')}/login"}, (err, response, _body) ->
@@ -171,14 +176,31 @@ describe "authentication", ->
           done()
 
   describe "DELETE /logout", ->
-    [body, response] = [null, null]
+    [body, response,] = [null, null]
     before (done) ->
-      request.del logout(), (err, _response, _body) ->
-        [body, response] = [_body, _response]
-        done()
+      user = UserFactory.build 'user'
+      user.online = true
+      user.save()
+      options = inputs_for_login_form "#{user.user_name}" , 'foobar'
+      request.post options, (ignoreErr, postResponse, postResponseBody) ->
+        request.get "http:" + postResponse.headers.location, (err, _response, _body) ->
+          [body, response] = [_body, _response]
+          done()
+    it "shows the user as offline if an online user logs out", (done) ->
+        request.del logout(), (err, _response, _body) ->
+          [body, response] = [_body, _response]
+          User.find (err, users) ->
+            expect(users[0].online).not.to.be true
+            done()
     it "shows flash message for logged out user", ->
       flashText = 'You have been logged out.'
       assert.hasTag body, "//div[@class='flash info']", flashText
+    it "shows error message if user tries to logout despite already logged out" , (done) ->
+      request.del logout(), (err, _response, _body) ->
+        [body, response] = [_body, _response]
+        errorText = "You are already not logged out."
+        assert.hasTag body, "//div[@class='flash error']", errorText
+        done()
 
   afterEach (done)->
     if db.collections['users']

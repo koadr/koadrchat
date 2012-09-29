@@ -9,6 +9,13 @@ routes = (app, mongoose, db) =>
   Message   = AllModels.Message
   User      = AllModels.User
 
+  get_session_name = (req)->
+    if req.session.currentUser?
+      req.session.currentUser.user_name
+    else
+      null
+
+
   authenticate = (name, pass, fn) ->
     User.find { user_name: name }, null , (err, user_search) ->
       user = user_search[0]
@@ -59,7 +66,7 @@ routes = (app, mongoose, db) =>
     authenticate user_name , password , (error, user) ->
       if user
         user.online = true
-        user.save(true)
+        user.save()
         req.session.regenerate ->
           req.session.currentUser = user
           next()
@@ -96,8 +103,17 @@ routes = (app, mongoose, db) =>
       res.redirect '/'
 
   app.del '/logout' , (req, res) ->
-    req.session.regenerate (err) ->
-      req.flash 'info' , 'You have been logged out.'
-      res.redirect '/login'
+    session_user_name = get_session_name req
+    if !session_user_name?
+      req.flash 'error' , "You are already not logged out."
+      return res.redirect '/'
+    User.find { user_name: session_user_name } , (err, users) ->
+      if user = users[0]
+        user.online = false
+        user.save (err, user) ->
+          req.session.regenerate (err) ->
+            req.flash 'info' , 'You have been logged out.'
+            res.redirect '/login'
+      return
 
 module.exports = routes

@@ -3,10 +3,27 @@ nav.top-bar
     li.name
       a(href="/")
         img(src="/images/foundation/orbit/logo.png")
+    li.toggle-topbar
+      a(href="#")
   section
-    ul.right
-      li
-        a(href="register") Register
-    ul.right
-      li
-        a(href="login") Login
+    if !isLoggedIn()
+      ul.right
+        li
+          a(href="register") Register
+        li
+          a(href="login") Login
+    else
+      ul.right
+        li
+          a(href="/users") Users
+        li.has-dropdown
+          a(href="#") Account
+
+          ul.dropdown
+            li
+              a(href="#") Profile
+            li
+              a(href="#") Settings
+            li.divider
+            li
+              a(href="#") Sign out

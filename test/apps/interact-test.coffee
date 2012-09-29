@@ -91,14 +91,14 @@ describe 'interact' , ->
       before (done) ->
         user = UserFactory.build 'user'
         user.save()
-        options = inputs_for_login_form 'Default_User31' , 'foobar'
+        options = inputs_for_login_form "#{user.user_name}" , 'foobar'
         request.post options, (ignoreErr, postResponse, postResponseBody) ->
           request.get "http:" + postResponse.headers.location, (err, _response, _body) ->
             [body, response] = [_body, _response]
             done()
       it "update states for user when user is logged in", (done) ->
         update_options = inputs_for_update_form 'foofi@foo.com', '123456' , '123456' , user.user_name
-        hash           = hash       = 'RcJX1gmkUbQm8JWVHy+aEBfTC/iTCFY8+CGkoy5r8L/mV/MybAKPRX7heoSNF4+/a4Gv50sQmzwrB8qtB4srScxk91rb3X05VlpEvQ2FoOBUHTVHIHTp5SIagqSQs6Cps4cvdw73RzTHPu+DL41iGCvHdr0JpGwicPDx85WLtoI='
+        hash           = 'RcJX1gmkUbQm8JWVHy+aEBfTC/iTCFY8+CGkoy5r8L/mV/MybAKPRX7heoSNF4+/a4Gv50sQmzwrB8qtB4srScxk91rb3X05VlpEvQ2FoOBUHTVHIHTp5SIagqSQs6Cps4cvdw73RzTHPu+DL41iGCvHdr0JpGwicPDx85WLtoI='
         request.put update_options, (upErr, upPostResponse, upPostResponseBody) ->
           request.get "http:" + upPostResponse.headers.location, (err, _response, _body) ->
             User.findById user._id , (err, user) ->
@@ -113,10 +113,11 @@ describe 'interact' , ->
       before (done) ->
         user = UserFactory.build 'user'
         user.save()
-        request.del logout(), (ignoreErr, delResponse, delResponsebody) ->
-          request {uri:"http://localhost:#{app.get('port')}/users/#{user.user_name}"}, (err, _response, _body) ->
-            [body, response] = [_body, _response]
-            done()
+        j = request.jar()
+        request = request.defaults({jar: j})
+        request {uri:"http://localhost:#{app.get('port')}/users/#{user.user_name}"}, (err, _response, _body) ->
+          [body, response] = [_body, _response]
+          done()
       it "should redirect to home page if not logged in" , ->
         expect(response.request.uri.path).to.eql '/'
       it "should prompt user to login", ->
@@ -127,7 +128,7 @@ describe 'interact' , ->
       before (done) ->
         user = UserFactory.build 'user'
         user.save()
-        options = inputs_for_login_form 'Default_User33' , 'foobar'
+        options = inputs_for_login_form "#{user.user_name}" , 'foobar'
         request.post options, (ignoreErr, postResponse, postResponseBody) ->
           request.get "http:" + postResponse.headers.location, (err, _response, _body) ->
             done()
@@ -155,7 +156,7 @@ describe 'interact' , ->
       before (done) ->
         user = UserFactory.build 'user'
         user.save()
-        options = inputs_for_login_form 'Default_User35' , 'foobar'
+        options = inputs_for_login_form "#{user.user_name}" , 'foobar'
         request.post options, (ignoreErr, postResponse, postResponseBody) ->
           request.get "http:" + postResponse.headers.location, (err, _response, _body) ->
             done()
@@ -164,8 +165,8 @@ describe 'interact' , ->
           expect(_response.request.uri.path).to.eql "/users/#{user.user_name}/edit"
           done()
 
-  describe 'api/GET' , ->
-    user  = null
+  describe 'api/GET /users' , ->
+    user  = null ; body = null
     before (done) ->
       user = UserFactory.build 'user'
       user.save()
@@ -174,10 +175,49 @@ describe 'interact' , ->
         request.get "http:" + postResponse.headers.location, (err, _response, _body) ->
           done()
     it "returns json data" , (done) ->
-      request "http://localhost:3000/api/users", (err, _response, _body) ->
+      request "http://localhost:#{app.get('port')}/api/users", (err, _response, _body) ->
         content_type = (_response.headers['content-type'].split ';')[0]
+        body = _body
         expect(content_type).to.eql 'application/json'
         done()
+    it "should show all users" , ->
+      expect(body).to.contain user.user_name
+
+  describe 'api/GET /users/:id' , ->
+    user  = null ; body = null
+    before (done) ->
+      user = UserFactory.build 'user'
+      user.save()
+      options = inputs_for_login_form "#{user.user_name}" , 'foobar'
+      request.post options, (ignoreErr, postResponse, postResponseBody) ->
+        request.get "http:" + postResponse.headers.location, (err, _response, _body) ->
+          done()
+    it "returns json data" , (done) ->
+      request "http://localhost:#{app.get('port')}/api/users/#{user.user_name}", (err, _response, _body) ->
+        content_type = (_response.headers['content-type'].split ';')[0]
+        body = _body
+        expect(content_type).to.eql 'application/json'
+        done()
+    it "should show all users" , ->
+      expect(body).to.contain user.user_name
+
+  describe 'api/PUT /users' , ->
+    [ body, response, user ] = [ null , null , null ]
+    before (done) ->
+      user = UserFactory.build 'user'
+      user.save()
+      options = inputs_for_login_form "#{user.user_name}" , 'foobar'
+      request.post options, (ignoreErr, postResponse, postResponseBody) ->
+        request.get "http:" + postResponse.headers.location, (err, _response, _body) ->
+          done()
+    it "should not return with 404" , (done) ->
+      update_options = inputs_for_update_form 'foofi@foo.com', '123456' , '123456' , user.user_name
+      request.put "http:" + "//localhost:#{app.get('port')}/api/users/#{user.user_name}", (err, _response, _body) ->
+        response = _response
+        expect(response.statusCode).not.to.be 404
+        done()
+    it "should update"
+    it "should return updated state in json"
 
 
   describe '404', ->

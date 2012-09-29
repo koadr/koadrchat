@@ -1,16 +1,19 @@
+#=require modernizr.foundation
+#=require jquery
 #=require foundation.min
+#=require app
+#=
 #=require underscore-min.js
 #=require backbone-min.js
 #=
 #=require interact
-#=require_tree ./templates
+#=require ./templates/templates
 #=require_tree ./helpers
 #=require_tree ./models
 #=require_tree ./collections
 #=require_tree ./views
 
 # jQuery ->
-
 #   log_chat_message = (message, type) ->
 #     li = jQuery("<li />").text(message)
 #     if type is "system"
