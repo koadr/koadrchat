@@ -56,26 +56,34 @@ label
   color: #92a4ac
   font-weight: 500
 
-// .top-bar
-//   border-bottom none
-//   height 45px
-//   line-height 45px
-//   margin 0 0 30px
-//   padding 0
-//   width 100%
+.top-bar
+  border-bottom none
+  line-height 45px
+  margin 0 0 30px
+  padding 0
+  width 100%
+  background #f16651
 
-//   ul li
-//     float left
-//     list-style none
+.top-bar ul > li a:not(.button)
+  color white
+  display block
+  font-size 15px
+  font-weight normal
+  height 45px
+  line-height 45px
+  padding 0 30px
 
-//     a
-//       color white
-//       display block
-//       font-size 21px
-//       font-weight normal
-//       height 45px
-//       line-height 45px
-//       padding 0 15px
+
+.top-bar ul > li.has-dropdown .dropdown li a
+  font-weight normal
+  height 100%
+  line-height 1
+  padding 5px 17px 5px 30px
+  white-space nowrap
+
+a:hover
+   background-color #54464c
+
 
 
 .tagline
