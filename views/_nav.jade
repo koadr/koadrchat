@@ -21,9 +21,11 @@ nav.top-bar
 
           ul.dropdown
             li
-              a(href="#") Profile
+              a(href="/users/#{currentUser().user_name}") Profile
             li
-              a(href="#") Settings
+              a(href="/users/#{currentUser().user_name}/edit") Settings
             li.divider
             li
-              a(href="#") Sign out
+              form(action="/logout", method="POST")
+                input(type="hidden", name="_method", value="delete")
+                input(type='submit', value= "Sign out" )
