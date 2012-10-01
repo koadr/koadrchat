@@ -1,14 +1,5 @@
 extends ../../../../views/layout
 
 block content
-  .twelve.columns
-    ul
-      each user in all_users
-        li
-          = user.user_name
-    #chatroom
-      ul#chat_log
-    input#chat_box(type="text", name="chat_box", value="", placeholder="type to chat...")
-
-    #user_enter
-    #bootstrapped_users(data-messages="#{all_users}")
+  #user_enter
+  #bootstrapped_users(data-messages="#{JSON.stringify(all_users)}")

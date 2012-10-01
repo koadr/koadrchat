@@ -201,12 +201,45 @@ var interp;
 }
 return buf.join("");
 }
+jade.templates["new_message_form"] = function(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<textarea type="text" placeholder="Share what\'s new..."></textarea><a href="#" class="tiny secondary radius button">Share</a>');
+}
+return buf.join("");
+}
 jade.templates["users_index"] = function(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('Hello World!!!');
+buf.push('<div class="six columns messages"><div class="row"><div class="four columns"><img src="http://placehold.it/72x72/000000/ffffff/" class="mini_profile_pic"/></div><div class="eight columns"><div class="share_message"><input type="text" placeholder="Share what\'s new..."/></div></div></div>');
+// iterate users.models
+;(function(){
+  if ('number' == typeof users.models.length) {
+    for (var $index = 0, $$l = users.models.length; $index < $$l; $index++) {
+      var user = users.models[$index];
+
+buf.push('<div class="row"><div class="four columns"><img src="http://placehold.it/72x72/000000/ffffff/" class="mini_profile_pic"/></div><div class="eight columns"><p>');
+var __val__ = user.get('messages')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p></div></div>');
+    }
+  } else {
+    for (var $index in users.models) {
+      var user = users.models[$index];
+
+buf.push('<div class="row"><div class="four columns"><img src="http://placehold.it/72x72/000000/ffffff/" class="mini_profile_pic"/></div><div class="eight columns"><p>');
+var __val__ = user.get('messages')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p></div></div>');
+   }
+  }
+}).call(this);
+
+buf.push('</div>');
 }
 return buf.join("");
 }

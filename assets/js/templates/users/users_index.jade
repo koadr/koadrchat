@@ -1,1 +1,15 @@
-| Hello World!!!
+.six.columns.messages
+  .row
+    .four.columns
+      img.mini_profile_pic(src="http://placehold.it/72x72/000000/ffffff/")
+    .eight.columns
+      .share_message
+        input(type="text" , placeholder="Share what's new...")
+  for user in users.models
+    .row
+      .four.columns
+        img.mini_profile_pic(src="http://placehold.it/72x72/000000/ffffff/")
+      .eight.columns
+        p
+          = user.get('messages')
+.six.columns
