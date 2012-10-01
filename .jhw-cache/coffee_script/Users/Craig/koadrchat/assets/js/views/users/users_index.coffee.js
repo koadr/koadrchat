@@ -31,7 +31,8 @@
       var new_message_view;
       event.preventDefault();
       new_message_view = new Interact.Views.NewMessage();
-      return $('.share_message').html(new_message_view.render().el);
+      $('.share_message').html(new_message_view.render().el);
+      return $('div').removeClass('share_message');
     };
 
     return UsersIndex;
