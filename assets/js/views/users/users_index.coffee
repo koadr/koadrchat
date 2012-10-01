@@ -15,3 +15,4 @@ class Interact.Views.UsersIndex extends Backbone.View
     event.preventDefault()
     new_message_view = new Interact.Views.NewMessage()
     $('.share_message').html(new_message_view.render().el)
+    $('div').removeClass('share_message')

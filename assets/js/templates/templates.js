@@ -239,7 +239,7 @@ buf.push('</p></div></div>');
   }
 }).call(this);
 
-buf.push('</div>');
+buf.push('</div><div class="six columns"></div>');
 }
 return buf.join("");
 }

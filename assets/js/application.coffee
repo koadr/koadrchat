@@ -1,4 +1,5 @@
 #=require foundation.min
+#=require app
 #=
 #=require underscore-min.js
 #=require backbone-min.js
