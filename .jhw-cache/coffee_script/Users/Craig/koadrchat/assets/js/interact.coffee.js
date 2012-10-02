@@ -7,7 +7,7 @@
     Helper: {},
     init: function() {
       var users_page;
-      this.collection = new Interact.Collections.User();
+      this.collection = new Interact.Collections.Users();
       this.collection.reset($('#bootstrapped_users').data('messages'));
       users_page = new Interact.Views.UsersIndex({
         collection: this.collection

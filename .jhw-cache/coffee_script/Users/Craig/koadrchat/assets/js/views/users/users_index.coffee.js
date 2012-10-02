@@ -10,15 +10,29 @@
       return UsersIndex.__super__.constructor.apply(this, arguments);
     }
 
-    UsersIndex.prototype.tagName = "li";
+    UsersIndex.prototype.className = 'row';
+
+    UsersIndex.prototype.template = jade.templates["users_index"];
+
+    UsersIndex.prototype.events = {
+      'focus .share_message': 'show_message_dropdown'
+    };
 
     UsersIndex.prototype.initalize = function() {};
 
-    UsersIndex.prototype.template = jade.templates["users_index"]();
-
     UsersIndex.prototype.render = function() {
-      $(this.el).html(this.template);
+      $(this.el).html(this.template({
+        users: this.collection
+      }));
       return this;
+    };
+
+    UsersIndex.prototype.show_message_dropdown = function(event) {
+      var new_message_view;
+      event.preventDefault();
+      new_message_view = new Interact.Views.NewMessage();
+      $('.share_message').html(new_message_view.render().el);
+      return $('div').removeClass('share_message');
     };
 
     return UsersIndex;

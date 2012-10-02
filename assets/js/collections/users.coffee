@@ -1,2 +1,3 @@
-class Interact.Collections.User extends Backbone.Collection
+class Interact.Collections.Users extends Backbone.Collection
   url: "/api/users"
+  model: Interact.Models.User
