@@ -1,15 +1,38 @@
-.six.columns.messages
-  .row
-    .four.columns
-      img.mini_profile_pic(src="http://placehold.it/72x72/000000/ffffff/")
-    .eight.columns
-      .share_message
-        input(type="text" , placeholder="Share what's new...")
+.four.columns.messages
+  .new_message
+    img(src="http://placehold.it/48x48/000000/ffffff/")
+    a(href="#") @koadr
+    p View my profile page
+    hr
+    input.ten.message_box(type="text" , placeholder="Share what's new...")
   for user in users.models
-    .row
-      .four.columns
-        img.mini_profile_pic(src="http://placehold.it/72x72/000000/ffffff/")
-      .eight.columns
-        p
-          = user.get('messages')
-.six.columns
+    .latest_messages
+      img.mini_profile_pic(src="http://placehold.it/48x48/000000/ffffff/")
+      a(href='#')
+        = "@" + user.get('user_name')
+      p
+        | Hello World! This is my first ever message! I hope you enjoy this app as much as I do. It's amazing how easy it is to create something of magnitude
+.four.columns
+  h3.capitalize.trending_header Trending on Koadr
+  li.pos
+    | Shoes
+  li.pos
+    | Animals
+  li.pos
+    | Basketball
+.four.columns
+  p
+    | koadr
+  input(type='text', placeholder="Chat with...")
+  h4 Online Users
+  for user in users.models
+    li
+      if user.get('online')
+        =user.get('user_name')
+  h4 Offline Users
+  for user in users.models
+    li
+      if !user.get('online')
+        =user.get('user_name')
+
+

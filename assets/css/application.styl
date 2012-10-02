@@ -2,14 +2,14 @@
 
 // Variables
 
-black                 = #000000
-body_background_color = #f16651
-error_message_color   = #C60F13
-h2_size               = 40px
-h3_size               = 2em
-form_color            = #383838
-success_message_color = #00AFF0
-white                 = #ffffff
+black                          = #000000
+body_background_color          = #f16651
+error_message_color            = #C60F13
+form_header_size               = 40px
+homepage_info_header_size      = 2em
+form_color                     = #383838
+success_message_color          = #00AFF0
+white                          = #ffffff
 
 
 // Functions and Mixins
@@ -19,24 +19,30 @@ border_radius(radius = 1px)
   -webkit-border-radius radius
   -moz-border-radius    radius
 
-form_padding(arguments)
-  padding arguments
-
-form_border(arguments)
-  border arguments
-
 generic_font_family()
   font-family "ff-enzo-web" , Helvetica, sans-serif
+
+// Miscellaneous
+
+.form_header
+  font-size form_header_size
+
+.capitalize
+  text-transform capitalize
+
+// Code
 
 body
   background-color body_background_color
   generic_font_family()
 
+  div.row:first-child
+    padding-bottom 50px
 
 .form_container
   border_radius 12px
   background-color form_color
-  form_border solid 1px black
+  border solid 1px black
   padding 20px 20px 20px 80px
 
 h1, h2, h3, h4, h5, h6
@@ -44,12 +50,8 @@ h1, h2, h3, h4, h5, h6
   font-weight normal
   generic_font_family()
 
-h2
-  font-size h2_size
-
-h3
-  font-size h3_size
-  font-weight 600
+li
+  list-style-type none
 
 label
   font-size 14px
@@ -63,15 +65,14 @@ label
   margin 0 0 110px
   font-weight 200
   font-size 3.50em
-  padding-top 50px
   color #191d1c
 
-.green_background
+.green_highlight
   background-color #99d999
   font-weight normal
   border_radius 4px
 
-.yellow_background
+.yellow_highlight
   background-color  #fff081
   font-weight normal
   border_radius 4px
@@ -120,25 +121,109 @@ label
     font-weight 200
     font-size 20px
 
-
-// Users
-
-.new_message_form
-  // float left
-
-.user_input_form_height
-  height 44px
-
-.mini_profile_pic
-  border_radius 4px
-  margin-left 15px
-
-li
-  list-style-type: none
-
-.messages input, .messages textarea
-  height 44px
-  margin-top 14px
+.homepage_info_header
+  font-size homepage_info_header_size
+  font-weight 600
 
 .move_right
   margin-left 15px
+
+// Users Message box
+
+.shared_config_for_message_box
+  background-color #F9F9F9
+  border_radius 8px
+  margin-bottom 25px
+  min-height 130px
+  position relative
+  padding 15px 0px 0px 15px
+
+.new_message
+  @extend .shared_config_for_message_box
+  min-height 150px
+  margin-bottom 15px
+
+  img
+    border_radius 4px
+
+  a
+    color black
+    position absolute
+    left 78px
+    top 15px
+
+    &:hover
+      color body_background_color
+
+  hr
+    width 90%
+    border 1px solid #D2DADA
+    position absolute
+    top 60px
+
+  p
+    color black
+    position absolute
+    left 78px
+    top 42px
+
+  input
+    position absolute
+    border_radius 10px
+    left 24px
+    top 100px
+
+  textarea
+    border_radius 5px
+    position absolute
+    left 24px
+    height 80px
+    top 100px
+
+  .share_msg_btn
+    position absolute
+    top 185px
+    left 218px
+
+.latest_messages
+  @extend .shared_config_for_message_box
+  margin-bottom 25px
+  min-height 130px
+
+  img
+    border_radius 4px
+
+  a
+    color black
+    position absolute
+    left 78px
+    top 15px
+
+    &:hover
+      color body_background_color
+
+  p
+    color black
+    font-size 11px
+    position absolute
+    left 78px
+    top 35px
+    max-width 200px
+
+.trending_header
+  font-size 1.17em
+  margin-top 165px
+  position fixed
+  text-decoration underline
+
+.pos
+  position fixed
+  margin-left 15px
+  &:nth-of-type(1)
+    margin-top 190px
+
+  &:nth-of-type(2)
+    margin-top 210px
+
+  &:nth-of-type(3)
+    margin-top 230px
