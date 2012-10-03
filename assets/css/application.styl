@@ -134,14 +134,12 @@ label
   background-color #F9F9F9
   border_radius 8px
   margin-bottom 25px
-  min-height 130px
   position relative
-  padding 15px 0px 0px 15px
+  padding 15px
 
 .new_message
   @extend .shared_config_for_message_box
   min-height 150px
-  margin-bottom 15px
 
   img
     border_radius 4px
@@ -155,28 +153,26 @@ label
     &:hover
       color body_background_color
 
-  hr
-    width 90%
-    border 1px solid #D2DADA
-    position absolute
-    top 60px
-
   p
     color black
     position absolute
     left 78px
     top 42px
 
+  hr
+    border 1px solid #099ABA
+    position absolute
+    top 60px
+    z-index 12
+
   input
     position absolute
     border_radius 10px
-    left 24px
     top 100px
 
   textarea
     border_radius 5px
     position absolute
-    left 24px
     height 80px
     top 100px
 
@@ -187,8 +183,7 @@ label
 
 .latest_messages
   @extend .shared_config_for_message_box
-  margin-bottom 25px
-  min-height 130px
+  min-height 110px
 
   img
     border_radius 4px
@@ -204,26 +199,23 @@ label
 
   p
     color black
-    font-size 11px
+    font-size 12px
+    padding 0 10px 0 10px
     position absolute
-    left 78px
+    left 68px
     top 35px
-    max-width 200px
 
 .trending_header
   font-size 1.17em
-  margin-top 165px
-  position fixed
   text-decoration underline
 
 .pos
-  position fixed
   margin-left 15px
   &:nth-of-type(1)
-    margin-top 190px
+    margin-top 10px
 
   &:nth-of-type(2)
-    margin-top 210px
+    margin-top 20px
 
   &:nth-of-type(3)
-    margin-top 230px
+    margin-top 30px
