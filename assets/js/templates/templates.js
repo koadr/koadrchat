@@ -215,7 +215,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="six columns messages"><div class="new_message"><img src="http://placehold.it/48x48/000000/ffffff/"/><a href="#">@koadr</a><p>View my profile page</p><hr class="line_resize"/><input type="text" placeholder="Share what\'s new..." class="eleven message_box"/></div>');
+buf.push('<div class="six columns"><div class="new_message"><img src="http://placehold.it/48x48/000000/ffffff/"/><a href="#">@koadr</a><p>View my profile page</p><hr class="line_resize"/><input type="text" placeholder="Share what\'s new..." class="eleven message_box"/></div>');
 // iterate users.models
 ;(function(){
   if ('number' == typeof users.models.length) {
@@ -239,7 +239,7 @@ buf.push('</a><p>Hello World! This is my first ever message! I hope you enjoy th
   }
 }).call(this);
 
-buf.push('</div><div class="two columns"><div class="trending_box"><h3 class="capitalize trending_header">Trending on Koadr</h3>');
+buf.push('</div><div class="four columns"><div class="trending_box"><h3 class="capitalize trending_header">Trending on Koadr</h3>');
 // iterate users.models
 ;(function(){
   if ('number' == typeof users.models.length) {
@@ -263,16 +263,17 @@ buf.push('</li>');
   }
 }).call(this);
 
-buf.push('</div></div><div class="four columns"><div class="chatroom"><h4 class="trending_header">koadr</h4><h4>Online Users</h4>');
+buf.push('</div></div><div class="two columns end"><div class="chatroom"><h4 class="trending_header">Koadr Users</h4><h4 class="online_users">online users</h4>');
 // iterate users.models
 ;(function(){
   if ('number' == typeof users.models.length) {
     for (var $index = 0, $$l = users.models.length; $index < $$l; $index++) {
       var user = users.models[$index];
 
-buf.push('<li>');
+buf.push('<li class="names">');
 if ( user.get('online'))
 {
+buf.push('<img src="/images/online.png"/>');
 var __val__ = user.get('user_name')
 buf.push(escape(null == __val__ ? "" : __val__));
 }
@@ -282,9 +283,10 @@ buf.push('</li>');
     for (var $index in users.models) {
       var user = users.models[$index];
 
-buf.push('<li>');
+buf.push('<li class="names">');
 if ( user.get('online'))
 {
+buf.push('<img src="/images/online.png"/>');
 var __val__ = user.get('user_name')
 buf.push(escape(null == __val__ ? "" : __val__));
 }
@@ -293,16 +295,17 @@ buf.push('</li>');
   }
 }).call(this);
 
-buf.push('<h4>Offline Users</h4>');
+buf.push('<h4 class="offline_users">offline users</h4>');
 // iterate users.models
 ;(function(){
   if ('number' == typeof users.models.length) {
     for (var $index = 0, $$l = users.models.length; $index < $$l; $index++) {
       var user = users.models[$index];
 
-buf.push('<li>');
+buf.push('<li class="names">');
 if ( !user.get('online'))
 {
+buf.push('<img src="/images/offline.png"/>');
 var __val__ = user.get('user_name')
 buf.push(escape(null == __val__ ? "" : __val__));
 }
@@ -312,9 +315,10 @@ buf.push('</li>');
     for (var $index in users.models) {
       var user = users.models[$index];
 
-buf.push('<li>');
+buf.push('<li class="names">');
 if ( !user.get('online'))
 {
+buf.push('<img src="/images/offline.png"/>');
 var __val__ = user.get('user_name')
 buf.push(escape(null == __val__ ? "" : __val__));
 }

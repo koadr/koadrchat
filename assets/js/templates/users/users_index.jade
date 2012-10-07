@@ -1,4 +1,4 @@
-.six.columns.messages
+.six.columns
   .new_message
     img(src="http://placehold.it/48x48/000000/ffffff/")
     a(href="#") @koadr
@@ -12,25 +12,25 @@
         = "@" + user.get('user_name')
       p
         | Hello World! This is my first ever message! I hope you enjoy this app as much as I do. It's amazing how easy it is to create something of magnitude.
-.two.columns
+.four.columns
   .trending_box
     h3.capitalize.trending_header Trending on Koadr
     for user in users.models
       li
         = user.get('user_name')
-.four.columns
+.two.columns.end
   .chatroom
     h4.trending_header
-      | koadr
-    h4 Online Users
+      | Koadr Users
+    h4.online_users online users
     for user in users.models
-      li
+      li.names
         if user.get('online')
+          img(src="/images/online.png")
           =user.get('user_name')
-    h4 Offline Users
+    h4.offline_users offline users
     for user in users.models
-      li
+      li.names
         if !user.get('online')
+          img(src="/images/offline.png")
           =user.get('user_name')
-
-

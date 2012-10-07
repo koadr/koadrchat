@@ -27,8 +27,7 @@ generic_font_family()
 .form_header
   font-size form_header_size
 
-.capitalize
-  text-transform capitalize
+
 
 // Code
 
@@ -130,12 +129,41 @@ label
 
 // Users Message box
 
+.chatroom
+  color rgb(119, 119, 119)
+  font normal 11px "Helvetica Neue",Arial,sans-serif
+  margin-bottom 10px
+  position relative
+  background-color #F9F9F9
+  border_radius 8px
+  padding 5px
+
+.chatroom li
+  padding 2px
+
+
+
+.trending_box
+  color rgb(119, 119, 119)
+  font normal 11px "Helvetica Neue",Arial,sans-serif
+  margin-bottom 8px
+  position relative
+  background-color #F9F9F9
+  border_radius 8px
+  padding 5px
+
+
+.trending_box li
+  padding 2px
+
 .shared_config_for_message_box
   background-color #F9F9F9
+  background rgb(249,249,249)
   border_radius 8px
   margin-bottom 25px
   position relative
   padding 15px
+
 
 .new_message
   @extend .shared_config_for_message_box
@@ -206,8 +234,28 @@ label
     top 35px
 
 .trending_header
-  font-size 1.17em
-  text-decoration underline
+  font-size 16px
+  color #383838
+  font-weight 600
+
+
+.online_users
+  font-family "Helvetica Neue",Arial,sans-serif
+  font-size 15px
+  font-weight bold
+  color #099ABA
+  font-variant small-caps
+
+
+.offline_users
+  font-family "Helvetica Neue",Arial,sans-serif
+  font-size 15px
+  font-weight bold
+  color #099ABA
+  font-variant small-caps
+
+.names img
+  margin-right 8px
 
 .pos
   margin-left 15px
