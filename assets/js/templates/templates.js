@@ -197,6 +197,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
+buf.push('<div class="trending_box"><h3 class="capitalize trending_header">Trending on Koadr</h3>');
 // iterate trending_topics.models
 ;(function(){
   if ('number' == typeof trending_topics.models.length) {
@@ -204,7 +205,7 @@ var interp;
       var topic = trending_topics.models[$index];
 
 buf.push('<li>');
-var __val__ = topic.get('name')
+var __val__ = topic.get('_id')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</li>');
     }
@@ -213,13 +214,14 @@ buf.push('</li>');
       var topic = trending_topics.models[$index];
 
 buf.push('<li>');
-var __val__ = topic.get('name')
+var __val__ = topic.get('_id')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</li>');
    }
   }
 }).call(this);
 
+buf.push('</div>');
 }
 return buf.join("");
 }
@@ -228,7 +230,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="six columns"><div class="new_message"><img src="http://placehold.it/48x48/000000/ffffff/"/><input id="message_box" type="text" placeholder="Share what\'s new..." class="nine"/><form id="new_msg_text_box"><li><a href="">');
+buf.push('<div class="six columns"><div class="new_message"><img src="/images/default_profile.png"/><input id="message_box" type="text" placeholder="Share what\'s new..." class="nine"/><form id="new_msg_text_box"><li><a href="">');
 var __val__ = "@" + current_user
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</a></li><p>View Your Profile</p><p class="char_count">150</p><textarea id="new_msg" type="text" placeholder="Share what\'s new..." class="nine"></textarea><a href="#" class="tiny share_msg_btn secondary radius button">Share</a></form></div>');
@@ -238,7 +240,7 @@ buf.push('</a></li><p>View Your Profile</p><p class="char_count">150</p><textare
     for (var $index = 0, $$l = recent_users.models.length; $index < $$l; $index++) {
       var user = recent_users.models[$index];
 
-buf.push('<div class="latest_messages"><img src="http://placehold.it/48x48/000000/ffffff/" class="mini_profile_pic"/><a href="#">');
+buf.push('<div class="latest_messages"><img src="/images/default_profile.png" class="mini_profile_pic"/><a href="#">');
 var __val__ = "@" + user.get('user_name')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</a><p>');
@@ -250,7 +252,7 @@ buf.push('</p></div>');
     for (var $index in recent_users.models) {
       var user = recent_users.models[$index];
 
-buf.push('<div class="latest_messages"><img src="http://placehold.it/48x48/000000/ffffff/" class="mini_profile_pic"/><a href="#">');
+buf.push('<div class="latest_messages"><img src="/images/default_profile.png" class="mini_profile_pic"/><a href="#">');
 var __val__ = "@" + user.get('user_name')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</a><p>');
@@ -261,66 +263,39 @@ buf.push('</p></div>');
   }
 }).call(this);
 
-buf.push('</div><div class="four columns"><div class="trending_box"><h3 class="capitalize trending_header">Trending on Koadr</h3><div id="trending_topics"></div></div></div><div class="two columns end"><div class="chatroom"><h4 class="trending_header">Koadr Users</h4><h4 class="online_users">online users</h4>');
+buf.push('</div><div class="four columns end"><div class="chatroom"><div class="chatroom_header"><img src="/images/online_true.png"/><a href="#">');
+var __val__ = "@" + current_user
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a></div>');
 // iterate online_users
 ;(function(){
   if ('number' == typeof online_users.length) {
     for (var $index = 0, $$l = online_users.length; $index < $$l; $index++) {
       var user = online_users[$index];
 
-buf.push('<li class="names">');
-if ( user.online)
+if ( user.user_name != current_user)
 {
-buf.push('<img src="/images/online.png"/>');
+buf.push('<div class="chat_row"><img src="/images/default_profile_min.png"/><img');
+buf.push(attrs({ 'src':("/images/online_" + (user.online) + ".png") }, {"src":true}));
+buf.push('/><li>');
 var __val__ = user.user_name
 buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</li></div>');
 }
-buf.push('</li>');
     }
   } else {
     for (var $index in online_users) {
       var user = online_users[$index];
 
-buf.push('<li class="names">');
-if ( user.online)
+if ( user.user_name != current_user)
 {
-buf.push('<img src="/images/online.png"/>');
+buf.push('<div class="chat_row"><img src="/images/default_profile_min.png"/><img');
+buf.push(attrs({ 'src':("/images/online_" + (user.online) + ".png") }, {"src":true}));
+buf.push('/><li>');
 var __val__ = user.user_name
 buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</li></div>');
 }
-buf.push('</li>');
-   }
-  }
-}).call(this);
-
-buf.push('<h4 class="offline_users">offline users</h4>');
-// iterate online_users
-;(function(){
-  if ('number' == typeof online_users.length) {
-    for (var $index = 0, $$l = online_users.length; $index < $$l; $index++) {
-      var user = online_users[$index];
-
-buf.push('<li class="names">');
-if ( !user.online)
-{
-buf.push('<img src="/images/offline.png"/>');
-var __val__ = user.user_name
-buf.push(escape(null == __val__ ? "" : __val__));
-}
-buf.push('</li>');
-    }
-  } else {
-    for (var $index in online_users) {
-      var user = online_users[$index];
-
-buf.push('<li class="names">');
-if ( !user.online)
-{
-buf.push('<img src="/images/offline.png"/>');
-var __val__ = user.user_name
-buf.push(escape(null == __val__ ? "" : __val__));
-}
-buf.push('</li>');
    }
   }
 }).call(this);

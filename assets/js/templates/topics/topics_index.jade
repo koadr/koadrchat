@@ -1,3 +1,5 @@
-for topic in trending_topics.models
-  li
-    = topic.get('name')
+.trending_box
+  h3.capitalize.trending_header Trending on Koadr
+  for topic in trending_topics.models
+    li
+      = topic.get('_id')

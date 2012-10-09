@@ -142,18 +142,46 @@ label
 // Users Message box
 
 .chatroom
-  color rgb(119, 119, 119)
-  font normal 11px "Helvetica Neue",Arial,sans-serif
-  margin-bottom 10px
-  position relative
+
   background-color #F9F9F9
   border_radius 8px
-  padding 5px
+  color rgb(119, 119, 119)
+  font-family "Helvetica Neue",Arial,sans-serif
+  padding 15px
+  position relative
 
-.chatroom li
-  padding 2px
+  li
+    //
+  a
+    // font-size 80%
+.chatroom_header
+  margin-bottom 15px
+  img
+    margin-right 5px
 
 
+.chat_row
+  border-bottom 1px solid gray
+  border-left 1px solid gray
+  border-right 1px solid gray
+  border-top 1px solid gray
+  height 48px
+  position relative
+  width 100%
+
+  li
+    position absolute
+    left 77px
+    top 20px
+
+  img:nth-of-type(1)
+    position absolute
+    top 7px
+
+  img:nth-of-type(2)
+    position absolute
+    left 47px
+    top 18px
 
 .trending_box
   color rgb(119, 119, 119)
@@ -268,9 +296,6 @@ label
   font-weight bold
   color #099ABA
   font-variant small-caps
-
-.names img
-  margin-right 8px
 
 .pos
   margin-left 15px

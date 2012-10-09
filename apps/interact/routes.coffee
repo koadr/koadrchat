@@ -2,6 +2,7 @@ encrypt   = require("../pass").hash
 salt_key  = null
 hash_key  = null
 check     = require('validator').check
+obj = require("./mapreduce.coffee").topics_obj
 
 routes = (app, mongoose, db) ->
 
@@ -55,16 +56,17 @@ routes = (app, mongoose, db) ->
     # List all users
     app.get '/', authenticate, (req, res) ->
       User.show_recent_users (err, recent_users) ->
-        Topic.find (err, topics) ->
-          User
-            .find()
-            .select('user_name online')
-            .exec (err, online_users) ->
-              res.render "#{ __dirname}/views/users/index",
-                title: 'Koadrchat - Talk Away'
-                recent_users: recent_users
-                online_users: online_users
-                topics: topics
+        Topic.mapReduce obj, (err, topic, stats) ->
+          topic.find().limit(5).sort('-value').exec (err, topics) ->
+            User
+              .find()
+              .select('user_name online')
+              .exec (err, online_users) ->
+                res.render "#{ __dirname}/views/users/index",
+                  title: 'Koadrchat - Talk Away'
+                  recent_users: recent_users
+                  online_users: online_users
+                  topics: topics
 
     # Edit User
     app.get '/:id/edit' , (req, res) ->
@@ -150,7 +152,6 @@ routes = (app, mongoose, db) ->
           res.json user
 
     app.put '/users/:id' , (req, res) ->
-      console.log req.params
       User.find { user_name : req.params.id } , (err, user_arr) ->
         user = user_arr[0]
         user.save (err, user) ->
@@ -158,8 +159,9 @@ routes = (app, mongoose, db) ->
 
     # Topics
     app.get '/topics' , (req, res) ->
-      Topic.find (err, topics) ->
-        res.json topics
+      Topic.mapReduce obj, (err, topic, stats) ->
+        topic.find().limit(5).sort('-value').exec (err, topics) ->
+          res.json topics
 
     app.post 'topics' , (req, res) ->
 
