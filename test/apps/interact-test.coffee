@@ -12,11 +12,13 @@ test_config    = require("../../config/mongo.yml").test
 db             = mongoose.createConnection(test_config.host, test_config.database , test_config.port)
 AllModels      = require('../../models/all_models')(mongoose, db)
 User           = AllModels.User
+Topic          = AllModels.Topic
 UserFactory    = require("../factories/user-factory.coffee")(mongoose, db)
+MessageFactory = require("../factories/message-factory.coffee")(mongoose, db)
+TopicFactory = require("../factories/topic-factory.coffee")(mongoose, db)
 
 
-
-inputs_for_login_form = ( user_name , pass) ->
+inputs_for_login_form = (user_name , pass) ->
   options =
     uri:"http://localhost:#{app.get('port')}/login"
     form:
@@ -37,6 +39,15 @@ logout = ->
     uri:"http://localhost:#{app.get('port')}/logout"
     followAllRedirects: true
 
+create = (content = 'foo' , user_name) ->
+  options =
+        uri: "http:" + "//localhost:#{app.get('port')}/api/users/"
+        body:
+          user_name: user_name
+          messages: [{content: content, topic_names:[
+            "Foo"]}]
+        json: true
+
 describe 'interact' , ->
   before (done) ->
     if db.collections['users']
@@ -51,19 +62,6 @@ describe 'interact' , ->
         done()
     it "has title", ->
       assert.hasTag body, '//title', "Koadrchat"
-
-  describe 'GET /users', ->
-    body = null
-    user_one = null ; user_two = null
-    before (done) ->
-      user_one = UserFactory.build 'user'
-      user_one.save()
-      request {uri:"http://localhost:#{app.get('port')}/users"}, (err, response, _body) ->
-        throw new Error(_body) if response.statusCode != 200
-        body = _body
-        done()
-    it "displays title on page", ->
-      assert.hasTag body, '//head/title', 'Koadrchat - Talk Away'
 
   describe 'PUT /users/:id' , ->
     describe 'NOT logged in' , ->
@@ -198,10 +196,10 @@ describe 'interact' , ->
         body = _body
         expect(content_type).to.eql 'application/json'
         done()
-    it "should show all users" , ->
+    it "should show user" , ->
       expect(body).to.contain user.user_name
 
-  describe 'api/PUT /users' , ->
+  describe 'api/PUT /users/:id' , ->
     [ body, response, user ] = [ null , null , null ]
     before (done) ->
       user = UserFactory.build 'user'
@@ -212,20 +210,108 @@ describe 'interact' , ->
           done()
     it "should not return with 404" , (done) ->
       update_options = inputs_for_update_form 'foofi@foo.com', '123456' , '123456' , user.user_name
-      request.put "http:" + "//localhost:#{app.get('port')}/api/users/#{user.user_name}", (err, _response, _body) ->
+      request.put update_options , (err, _response, _body) ->
         response = _response
         expect(response.statusCode).not.to.be 404
         done()
     it "should update"
     it "should return updated state in json"
 
+  describe 'api/POST /users' , ->
+    [ body, response, user, second_user ] = [ null , null , null , null]
+    beforeEach (done) ->
+      user = UserFactory.build 'user'
+      user.save()
+      options = inputs_for_login_form "#{user.user_name}" , 'foobar'
+      request.post options, (ignoreErr, postResponse, postResponseBody) ->
+        request.get "http:" + postResponse.headers.location, (err, _response, _body) ->
+          done()
+    it "should not return with 404", (done) ->
+      opts = create 'No 404!' , user.user_name
+      request.post opts , (err, _response, _body) ->
+        response = _response
+        expect(response.statusCode).not.to.be 404
+        done()
+    it "should create message for user", (done) ->
+      opts = create 'Hey World!' , user.user_name
+      request.post opts , (err, _response, _body) ->
+        User.find { user_name: user.user_name } , (err, user) ->
+          expect(user[0].messages[0].content).to.be.eql("Hey World!")
+          expect(err).to.be null
+          done()
+    it "should update user's timestamp after creating a message for user" , (done) ->
+      timestamp = user.timestamp.toString()
+      opts = create 'Update My Timestamp!' , user.user_name
+      request.post opts , (err, _response, _body) ->
+        User.find { user_name: user.user_name } , (err, user) ->
+          expect(user[0].timestamp.toString()).not.to.equal(timestamp)
+          expect(err).to.be null
+          done()
+
+  describe 'GET api/topics' , ->
+    topic  = null ; body = null ; user = null;
+    before (done) ->
+      topic = TopicFactory.build 'topic'
+      user  = UserFactory.build 'user'
+      topic.save()
+      user.save()
+      options = inputs_for_login_form "#{user.user_name}" , 'foobar'
+      request.post options, (ignoreErr, postResponse, postResponseBody) ->
+        request.get "http:" + postResponse.headers.location, (err, _response, _body) ->
+          done()
+    it "returns json data" , (done) ->
+      request "http://localhost:#{app.get('port')}/api/topics", (err, _response, _body) ->
+        content_type = (_response.headers['content-type'].split ';')[0]
+        body = _body
+        expect(content_type).to.eql 'application/json'
+        done()
+    it "should show all topics" , ->
+      expect(body).to.contain topic._id
+
+  describe 'api/GET /topics/:id' , ->
+    user  = null ; body = null ; topic = null
+    before (done) ->
+      user  = UserFactory.build 'user'
+      topic = TopicFactory.build 'topic'
+      user.save()
+      topic.save()
+      options = inputs_for_login_form "#{user.user_name}" , 'foobar'
+      request.post options, (ignoreErr, postResponse, postResponseBody) ->
+        request.get "http:" + postResponse.headers.location, (err, _response, _body) ->
+          done()
+    it "returns json data" , (done) ->
+      request "http://localhost:#{app.get('port')}/api/topics/#{topic._id}", (err, _response, _body) ->
+        content_type = (_response.headers['content-type'].split ';')[0]
+        body = _body
+        expect(content_type).to.eql 'application/json'
+        done()
+    it "should show topic" , ->
+      expect(body).to.contain topic._id
+
+  describe 'api/PUT /topics/:id' , ->
+    [ body, response, user , topic ] = [ null , null , null , null ]
+    before (done) ->
+      user  = UserFactory.build 'user'
+      topic = TopicFactory.build 'topic'
+      topic.save()
+      user.save()
+      options = inputs_for_login_form "#{user.user_name}" , 'foobar'
+      request.post options, (ignoreErr, postResponse, postResponseBody) ->
+        request.get "http:" + postResponse.headers.location, (err, _response, _body) ->
+          done()
+    it "should not return with 404" , (done) ->
+      # update_options = inputs_for_update_topic_form 'Animals', user.user_name
+      request.put "http:" + "//localhost:#{app.get('port')}/api/topics/#{topic._id}", (err, _response, _body) ->
+        response = _response
+        expect(response.statusCode).not.to.be 404
+        done()
 
   describe '404', ->
     [ body, response, user ] = [ null , null , null ]
     before (done) ->
       user = UserFactory.build 'user'
       user.save()
-      request {uri:"http://localhost:#{app.get('port')}/users/badlink/edit"}, (err, _response, _body) ->
+      request {uri:"http://localhost:#{app.get('port')}/users/badlink/edit/"}, (err, _response, _body) ->
         [body, response] = [_body, _response]
         done()
     it "should respond with 404 for bad uri", ->
@@ -235,4 +321,6 @@ describe 'interact' , ->
   afterEach (done)->
     if db.collections['users']
       db.collections['users'].drop (err)->
-        done()
+        if db.collections['topics']
+          db.collections['topics'].drop (err)->
+            done()

@@ -12,6 +12,10 @@
 
     NewMessage.prototype.tagName = "form";
 
+    NewMessage.prototype.events = {
+      'click .share_msg_btn': 'add_message'
+    };
+
     NewMessage.prototype.initalize = function() {};
 
     NewMessage.prototype.template = jade.templates["new_message_form"];
@@ -19,6 +23,13 @@
     NewMessage.prototype.render = function() {
       $(this.el).html(this.template());
       return this;
+    };
+
+    NewMessage.prototype.add_message = function(event) {
+      var $new_message;
+      event.preventDefault();
+      $new_message = $('#new_msg');
+      return alert($new_message.val());
     };
 
     return NewMessage;

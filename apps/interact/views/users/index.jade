@@ -3,4 +3,7 @@ extends ../../../../views/layout
 block content
   .twelve.columns
     #user_enter
-  #bootstrapped_users(data-messages="#{JSON.stringify(all_users)}")
+  #bootstrapped_recent_users(data-recent_users="#{JSON.stringify(recent_users)}")
+  #bootstrapped_online_users(data-online_users="#{JSON.stringify(online_users)}")
+  #bootstrapped_topics(data-topics="#{JSON.stringify(topics)}")
+  #user_name(data-user=currentUser().user_name)

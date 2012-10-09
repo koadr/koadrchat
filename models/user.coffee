@@ -13,6 +13,9 @@ User = (mongoose, db) ->
     online:
       type: Boolean
       default: false
+    timestamp:
+      type: Date
+      default: Date.now()
     salt:
       type: String
       required: true
@@ -32,6 +35,13 @@ User = (mongoose, db) ->
   UserSchema.statics.find_offline_users = (callback) ->
     @find({online: false})
     .select('user_name online email messages')
+    .exec(callback)
+
+  UserSchema.statics.show_recent_users = (callback) ->
+    @find()
+    .select('user_name online email messages timestamp')
+    .sort('-timestamp')
+    .limit(10)
     .exec(callback)
 
   UserSchema

@@ -134,7 +134,7 @@ describe "authentication", ->
       before (done) ->
         user = UserFactory.build 'user'
         user.save( { safe: true } )
-        options = inputs_for_register_form 'Default_User28' , 'foobar@example.com' , '12345' , '12345'
+        options = inputs_for_register_form "#{user.user_name}" , 'foobar@example.com' , '12345' , '12345'
         request.post options, (ignoreErr, postResponse, postResponseBody) ->
           request.get "http:" + postResponse.headers.location, (err, _response, _body) ->
             [body, response] = [_body, _response]

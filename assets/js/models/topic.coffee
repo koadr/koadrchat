@@ -1,0 +1,1 @@
+class Interact.Models.Topic extends Backbone.Model

@@ -7,8 +7,10 @@ db             = mongoose.createConnection(test_config.host, test_config.databas
 AllModels      = require('../../models/all_models')(mongoose, db)
 Message        = AllModels.Message
 User           = AllModels.User
+Topic          = AllModels.Topic
 UserFactory    = require("../factories/user-factory.coffee")(mongoose, db)
 MessageFactory = require("../factories/message-factory.coffee")(mongoose, db)
+TopicFactory = require("../factories/topic-factory.coffee")(mongoose, db)
 
 describe 'User', ->
 
@@ -60,16 +62,13 @@ describe 'User', ->
       expect(user).to.have.property "online"
     it "should have a hash field for encrypted password", ->
       expect(user).to.have.property 'hash'
-    it "associates a user with a message", (done) ->
-      message = MessageFactory.build 'message'
-      user.messages.push message
-      user.save()
-      expect(user.messages[0]._id).to.equal message._id
-      expect(user.messages[0].content).to.equal message.content
-      done()
+    it "should have a date field", ->
+      expect(user).to.have.property 'timestamp'
+    it "should have a messages array property", ->
+      expect(user).to.have.property 'messages'
 
   describe "update", ->
-    user = null
+    user = null ; message = null
 
     beforeEach (done) ->
       user = UserFactory.build('user') ; message = MessageFactory.build 'message'
@@ -101,27 +100,43 @@ describe 'User', ->
         done()
     it "changes a message of a user", ->
       expect(user.messages[0].content).to.eql('Hello World!')
-    it "should not be able to change a salt once created", ->
-      # user.salt = 'foo'
-      # user.save (errors, user) ->
-      #   expect(errors).not.to.be null
-      #   done()
-    it "should not be able to change a hash once created", ->
-      # user.hash = 'foo'
-      # user.save (errors, user) ->
-      #   expect(errors).not.to.be null
-      #   done()
+    it "associates a user with a message", (done) ->
+      expect(user.messages).not.to.be.empty()
+      done()
+    it "saves a message with topic alongside a user" , ->
+      topic = TopicFactory.build 'topic'
+      message.topics.push topic
+      message.save (err, msg) ->
+        expect(user.messages).to.not.be undefined
+        expect(user.messages[0].topics).to.not.be undefined
+    it "populates topics for a message belonging to a user", (done) ->
+      topic = TopicFactory.build 'topic'
+      topic.save (err, topic) ->
+        user.messages[0].topics.push topic
+        message.save (err, message) ->
+          Message.pop_topics_with_messages (err, msg) ->
+            expect(msg[0].topics[0].name).to.eql topic.name
+            done()
+    afterEach (done) ->
+      if db.collections['messages']
+        db.collections['messages'].drop (err)->
+          done()
 
   describe "show", ->
     user_one = null ; user_two = null; message_one = null ; message_two = null
     beforeEach (done) ->
       user_one = UserFactory.build('user') ; user_two = UserFactory.build('user')
+      user_one.timestamp = new Date(1349500778330)
+      user_two.timestamp = new Date(1349500778338)
       message_one = MessageFactory.build('message') ; message_two = MessageFactory.build('message')
       user_one.messages.push message_one ; user_one.messages.push message_two
       user_one.save()
       user_two.save()
       done()
-
+    it "shows at most ten recent users ", (done) ->
+      User.show_recent_users (err, users) ->
+        expect(users[0].user_name).to.be.eql user_two.user_name
+        done()
     it "should show all messages for a certain user", ->
       expect(user_one.messages.length).to.be.eql 2
 

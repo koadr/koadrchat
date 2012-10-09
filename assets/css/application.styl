@@ -29,6 +29,18 @@ generic_font_family()
 
 
 
+.blue
+  color #07A4C7
+
+.red
+  color red
+
+// Fix bug for input box with mobile layout
+
+@media only screen and (max-width: 767px)
+  input[type="text"].nine, .row input[type="text"].nine, input[type="password"].nine, .row input[type="password"].nine, input[type="date"].nine, .row input[type="date"].nine, input[type="datetime"].nine, .row input[type="datetime"].nine, input[type="email"].nine, .row input[type="email"].nine, input[type="number"].nine, .row input[type="number"].nine, input[type="search"].nine, .row input[type="search"].nine, input[type="tel"].nine, .row input[type="tel"].nine, input[type="time"].nine, .row input[type="time"].nine, input[type="url"].nine, .row input[type="url"].nine, textarea.nine, .row textarea.nine
+    width: 80% !important;
+
 // Code
 
 body
@@ -161,57 +173,60 @@ label
   background rgb(249,249,249)
   border_radius 8px
   margin-bottom 25px
-  position relative
+  // position relative
   padding 15px
 
 
 .new_message
   @extend .shared_config_for_message_box
-  min-height 150px
+  height 78px
 
   img
     border_radius 4px
-
-  a
-    color black
-    position absolute
-    left 78px
-    top 15px
-
-    &:hover
-      color body_background_color
-
-  p
-    color black
-    position absolute
-    left 78px
-    top 42px
-
-  hr
-    border 1px solid #099ABA
-    position absolute
-    top 60px
-    z-index 12
+    float left
 
   input
-    position absolute
     border_radius 10px
-    top 100px
+    float left
+    height 48px
+    margin-left 15px
 
   textarea
     border_radius 5px
-    position absolute
+    clear left
+    float left
     height 80px
-    top 100px
+    margin 10px 0 10px 63px
 
-  .share_msg_btn
-    position absolute
-    top 185px
-    left 218px
+  #new_msg_text_box
+    display none
+    position relative
+
+    p:nth-of-type(1)
+      left 63px
+      position absolute
+      top  30px
+    p:nth-of-type(2)
+      font-size 24px
+      right 10%
+      position absolute
+      top 0
+
+    li
+      a:first-child
+        left 0
+        position absolute
+    a
+      clear left
+      display inline-block
+      float left
+      margin-left 63px
+
 
 .latest_messages
   @extend .shared_config_for_message_box
   min-height 110px
+  position relative
 
   img
     border_radius 4px

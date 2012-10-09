@@ -26,6 +26,12 @@ describe "Message", ->
     it "has a content property", ->
       expect(message).to.have.property('content')
 
+    it "associated with topics", ->
+      expect(message).to.have.property('topics')
+
+    it "has a timestamp property", ->
+      expect(message).to.have.property 'timestamp'
+
     it "sets message", ->
       expect(message.length).not.to.be.eql 0
 
@@ -39,6 +45,12 @@ describe "Message", ->
 
     it "should change state", ->
       expect(message.content).to.eql('Lorem Ipsum')
+
+    it "does not allow to you to write a message longer than 150 characters", (done) ->
+      message.content = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam."
+      message.save (err, msg) ->
+        expect(err).to.not.be null
+        done()
 
   describe "index", ->
     message_one = null ; message_two = null

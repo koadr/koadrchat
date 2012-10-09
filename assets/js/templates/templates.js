@@ -184,15 +184,6 @@ jade.render = function(node, template, data) {
   node.innerHTML = tmp;
 };
 
-jade.templates["messages_index"] = function(locals, attrs, escape, rethrow, merge) {
-attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
-var buf = [];
-with (locals || {}) {
-var interp;
-buf.push('Hello World!!!');
-}
-return buf.join("");
-}
 jade.templates["templates.js"] = function(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -201,12 +192,34 @@ var interp;
 }
 return buf.join("");
 }
-jade.templates["new_message_form"] = function(locals, attrs, escape, rethrow, merge) {
+jade.templates["topics_index"] = function(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<textarea type="text" placeholder="Share what\'s new..." class="eleven"></textarea><a href="#" class="tiny share_msg_btn secondary radius button">Share</a>');
+// iterate trending_topics.models
+;(function(){
+  if ('number' == typeof trending_topics.models.length) {
+    for (var $index = 0, $$l = trending_topics.models.length; $index < $$l; $index++) {
+      var topic = trending_topics.models[$index];
+
+buf.push('<li>');
+var __val__ = topic.get('name')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</li>');
+    }
+  } else {
+    for (var $index in trending_topics.models) {
+      var topic = trending_topics.models[$index];
+
+buf.push('<li>');
+var __val__ = topic.get('name')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</li>');
+   }
+  }
+}).call(this);
+
 }
 return buf.join("");
 }
@@ -215,79 +228,64 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="six columns"><div class="new_message"><img src="http://placehold.it/48x48/000000/ffffff/"/><a href="#">@koadr</a><p>View my profile page</p><hr class="line_resize"/><input type="text" placeholder="Share what\'s new..." class="eleven message_box"/></div>');
-// iterate users.models
+buf.push('<div class="six columns"><div class="new_message"><img src="http://placehold.it/48x48/000000/ffffff/"/><input id="message_box" type="text" placeholder="Share what\'s new..." class="nine"/><form id="new_msg_text_box"><li><a href="">');
+var __val__ = "@" + current_user
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a></li><p>View Your Profile</p><p class="char_count">150</p><textarea id="new_msg" type="text" placeholder="Share what\'s new..." class="nine"></textarea><a href="#" class="tiny share_msg_btn secondary radius button">Share</a></form></div>');
+// iterate recent_users.models
 ;(function(){
-  if ('number' == typeof users.models.length) {
-    for (var $index = 0, $$l = users.models.length; $index < $$l; $index++) {
-      var user = users.models[$index];
+  if ('number' == typeof recent_users.models.length) {
+    for (var $index = 0, $$l = recent_users.models.length; $index < $$l; $index++) {
+      var user = recent_users.models[$index];
 
 buf.push('<div class="latest_messages"><img src="http://placehold.it/48x48/000000/ffffff/" class="mini_profile_pic"/><a href="#">');
 var __val__ = "@" + user.get('user_name')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a><p>Hello World! This is my first ever message! I hope you enjoy this app as much as I do. It\'s amazing how easy it is to create something of magnitude.</p></div>');
+buf.push('</a><p>');
+var __val__ = helper.get_recent_msg(user)
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p></div>');
     }
   } else {
-    for (var $index in users.models) {
-      var user = users.models[$index];
+    for (var $index in recent_users.models) {
+      var user = recent_users.models[$index];
 
 buf.push('<div class="latest_messages"><img src="http://placehold.it/48x48/000000/ffffff/" class="mini_profile_pic"/><a href="#">');
 var __val__ = "@" + user.get('user_name')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a><p>Hello World! This is my first ever message! I hope you enjoy this app as much as I do. It\'s amazing how easy it is to create something of magnitude.</p></div>');
+buf.push('</a><p>');
+var __val__ = helper.get_recent_msg(user)
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p></div>');
    }
   }
 }).call(this);
 
-buf.push('</div><div class="four columns"><div class="trending_box"><h3 class="capitalize trending_header">Trending on Koadr</h3>');
-// iterate users.models
+buf.push('</div><div class="four columns"><div class="trending_box"><h3 class="capitalize trending_header">Trending on Koadr</h3><div id="trending_topics"></div></div></div><div class="two columns end"><div class="chatroom"><h4 class="trending_header">Koadr Users</h4><h4 class="online_users">online users</h4>');
+// iterate online_users
 ;(function(){
-  if ('number' == typeof users.models.length) {
-    for (var $index = 0, $$l = users.models.length; $index < $$l; $index++) {
-      var user = users.models[$index];
-
-buf.push('<li>');
-var __val__ = user.get('user_name')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</li>');
-    }
-  } else {
-    for (var $index in users.models) {
-      var user = users.models[$index];
-
-buf.push('<li>');
-var __val__ = user.get('user_name')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</li>');
-   }
-  }
-}).call(this);
-
-buf.push('</div></div><div class="two columns end"><div class="chatroom"><h4 class="trending_header">Koadr Users</h4><h4 class="online_users">online users</h4>');
-// iterate users.models
-;(function(){
-  if ('number' == typeof users.models.length) {
-    for (var $index = 0, $$l = users.models.length; $index < $$l; $index++) {
-      var user = users.models[$index];
+  if ('number' == typeof online_users.length) {
+    for (var $index = 0, $$l = online_users.length; $index < $$l; $index++) {
+      var user = online_users[$index];
 
 buf.push('<li class="names">');
-if ( user.get('online'))
+if ( user.online)
 {
 buf.push('<img src="/images/online.png"/>');
-var __val__ = user.get('user_name')
+var __val__ = user.user_name
 buf.push(escape(null == __val__ ? "" : __val__));
 }
 buf.push('</li>');
     }
   } else {
-    for (var $index in users.models) {
-      var user = users.models[$index];
+    for (var $index in online_users) {
+      var user = online_users[$index];
 
 buf.push('<li class="names">');
-if ( user.get('online'))
+if ( user.online)
 {
 buf.push('<img src="/images/online.png"/>');
-var __val__ = user.get('user_name')
+var __val__ = user.user_name
 buf.push(escape(null == __val__ ? "" : __val__));
 }
 buf.push('</li>');
@@ -296,30 +294,30 @@ buf.push('</li>');
 }).call(this);
 
 buf.push('<h4 class="offline_users">offline users</h4>');
-// iterate users.models
+// iterate online_users
 ;(function(){
-  if ('number' == typeof users.models.length) {
-    for (var $index = 0, $$l = users.models.length; $index < $$l; $index++) {
-      var user = users.models[$index];
+  if ('number' == typeof online_users.length) {
+    for (var $index = 0, $$l = online_users.length; $index < $$l; $index++) {
+      var user = online_users[$index];
 
 buf.push('<li class="names">');
-if ( !user.get('online'))
+if ( !user.online)
 {
 buf.push('<img src="/images/offline.png"/>');
-var __val__ = user.get('user_name')
+var __val__ = user.user_name
 buf.push(escape(null == __val__ ? "" : __val__));
 }
 buf.push('</li>');
     }
   } else {
-    for (var $index in users.models) {
-      var user = users.models[$index];
+    for (var $index in online_users) {
+      var user = online_users[$index];
 
 buf.push('<li class="names">');
-if ( !user.get('online'))
+if ( !user.online)
 {
 buf.push('<img src="/images/offline.png"/>');
-var __val__ = user.get('user_name')
+var __val__ = user.user_name
 buf.push(escape(null == __val__ ? "" : __val__));
 }
 buf.push('</li>');

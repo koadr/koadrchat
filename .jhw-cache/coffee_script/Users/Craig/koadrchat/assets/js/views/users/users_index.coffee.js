@@ -15,7 +15,7 @@
     UsersIndex.prototype.template = jade.templates["users_index"];
 
     UsersIndex.prototype.events = {
-      'focus .share_message': 'show_message_dropdown'
+      'focus .message_box': 'show_message_dropdown'
     };
 
     UsersIndex.prototype.initalize = function() {};
@@ -31,8 +31,11 @@
       var new_message_view;
       event.preventDefault();
       new_message_view = new Interact.Views.NewMessage();
-      $('.share_message').html(new_message_view.render().el);
-      return $('div').removeClass('share_message');
+      $('.message_box').remove();
+      $('input').removeClass('.message_box');
+      $('.new_message').append(new_message_view.render().el);
+      $('.new_message').css('height', 215);
+      return $('.new_message textarea').focus();
     };
 
     return UsersIndex;

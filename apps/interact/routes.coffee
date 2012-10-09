@@ -8,13 +8,13 @@ routes = (app, mongoose, db) ->
   AllModels = require('../../models/all_models')(mongoose, db)
   Message   = AllModels.Message
   User      = AllModels.User
+  Topic     = AllModels.Topic
 
   get_session_name = (req)->
     if req.session.currentUser?
       req.session.currentUser.user_name
     else
       null
-
 
   check_email = (req , res , next) ->
     try
@@ -39,22 +39,32 @@ routes = (app, mongoose, db) ->
       hash_key = Buffer(hash, 'binary').toString('base64')
       next()
 
+  authenticate = (req,res,next) ->
+    session_user_name = get_session_name req
+    if !req.session.currentUser?
+      req.flash 'error' , "Please login!"
+      return res.redirect '/login'
+    next()
+
   app.get '/', (req, res) ->
     res.render "#{ __dirname}/views/homepage",
     title: 'Koadrchat'
 
-
   app.namespace '/users' , ->
 
     # List all users
-    app.get '/', (req, res) ->
-       User
-        .find()
-        .select('user_name  online email')
-        .exec (err, all_users) ->
-          res.render "#{ __dirname}/views/users/index",
-            title: 'Koadrchat - Talk Away'
-            all_users: all_users
+    app.get '/', authenticate, (req, res) ->
+      User.show_recent_users (err, recent_users) ->
+        Topic.find (err, topics) ->
+          User
+            .find()
+            .select('user_name online')
+            .exec (err, online_users) ->
+              res.render "#{ __dirname}/views/users/index",
+                title: 'Koadrchat - Talk Away'
+                recent_users: recent_users
+                online_users: online_users
+                topics: topics
 
     # Edit User
     app.get '/:id/edit' , (req, res) ->
@@ -100,12 +110,36 @@ routes = (app, mongoose, db) ->
 
   app.namespace '/api' , ->
 
+    app.all '*' , authenticate
+
     app.get '/users', (req, res) ->
-      User
-        .find()
-        .select('user_name online email')
-        .exec (err, all_users) ->
-          res.send(all_users)
+      User.show_recent_users (err, recent_users) ->
+        User
+          .find()
+          .select('user_name online')
+          .exec (err, online_users) ->
+            res.json({recent_users:recent_users, online_users: online_users})
+
+    app.post '/users', (req, res) ->
+      User.find { user_name: req.session.currentUser.user_name } , (err, usr_arr) ->
+        user            = usr_arr[0]
+        message = req.body.messages[req.body.messages.length - 1]
+        if !(req.body.user_name == user.user_name)
+          req.flash 'error', 'Please do not try to alter the content of other users.'
+          return res.redirect "/users/#{user.user_name}"
+        for topic_name in message.topic_names
+          topic           = new Topic
+          topic.name      = topic_name
+          topic.timestamp = new Date()
+          topic.save (err, topic) ->
+            user.messages      = req.body.messages
+            user.timestamp     = new Date()
+            last_message_attrs = user.messages[req.body.messages.length - 1]
+            message            = new Message last_message_attrs
+            message.topics.push topic unless message.topics[topic._id]
+            message.save (err, msgs) ->
+              user.save (err, usr) ->
+                res.json user
 
     app.get '/users/:id' ,(req, res) ->
        User
@@ -116,10 +150,29 @@ routes = (app, mongoose, db) ->
           res.json user
 
     app.put '/users/:id' , (req, res) ->
+      console.log req.params
       User.find { user_name : req.params.id } , (err, user_arr) ->
         user = user_arr[0]
         user.save (err, user) ->
           res.json user
+
+    # Topics
+    app.get '/topics' , (req, res) ->
+      Topic.find (err, topics) ->
+        res.json topics
+
+    app.post 'topics' , (req, res) ->
+
+    app.get 'topics/:id' , (req, res) ->
+      Topic
+        .findById req.params.id , (err, topic) ->
+          res.json topic
+
+    app.put '/topics/:id' , (req, res) ->
+      Topic.findById req.params.id , (err, topic) ->
+        topic.save (err, topic) ->
+          res.json topic
+
 
 
   # # 404
