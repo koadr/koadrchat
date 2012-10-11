@@ -58,6 +58,7 @@ routes = (app, mongoose, db) ->
       User.show_recent_users (err, recent_users) ->
         Topic.mapReduce obj, (err, topic, stats) ->
           topic.find().limit(5).sort('-value').exec (err, topics) ->
+            console.log this
             User
               .find()
               .select('user_name online')

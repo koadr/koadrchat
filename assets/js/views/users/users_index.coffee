@@ -6,6 +6,7 @@ class Interact.Views.UsersIndex extends Backbone.View
     'focus #message_box' : 'show_txt_msg_box'
     'click .share_msg_btn': 'add_message'
     'keyup #new_msg': 'char_countdown'
+    'click .chat_row': 'open_chat_box'
 
   initialize: (collection, user, helper, online_users) ->
     @collection      = collection
@@ -58,3 +59,32 @@ class Interact.Views.UsersIndex extends Backbone.View
       $('.char_count').html "<span class='red'>#{char_remaining}</span>"
     else
      $('.char_count').html "<span class='blue'>#{char_remaining}</span>"
+
+  setup_chat_box: () ->
+    new_cbox_placement = null
+    $chat_box          = $(".chat-box")
+    $chat_box_width    = $chat_box.width()
+    $chat_box_pos      = $chat_box.css('right').replace("px", "")
+    new_cbox_placement = Number($chat_box_pos) + $chat_box_width + 10
+    if @chat_box_pos
+      num_chat_boxes = $("#chat_rooms > div").length
+      # Prevents the second chat_box from starting wrongfully in the third position.
+      if num_chat_boxes > 2 then new_cbox_placement += @chat_box_pos else new_cbox_placement = @chat_box_pos
+      # Prevents more chat boxes than two-thirds of the browser width
+      return false if new_cbox_placement > (2.0/3 * $(window).width() )
+      $("#chat_rooms > div:last-child .chat-box").css 'right', new_cbox_placement
+    @chat_box_pos = new_cbox_placement
+
+  setup_min_chat_box: () ->
+    $chat_box          = $("#chat_rooms > div:last-child .chat-box")
+    $chat_box_pos      = $chat_box.css('right').replace("px", "")
+    $("#chat_rooms > div:last-child .minimized-chat-box").css 'right' , Number($chat_box_pos)
+
+  open_chat_box: (event) ->
+    $current_user      = @$(event.target).find('li')[0].innerText
+    $online_url_path   = @$(event.target).find('.online_status')[0].src
+    $chat_box_view     = new Interact.Views.ChatBox($current_user, $online_url_path)
+    $("#chat_rooms").append($chat_box_view.render().el)
+    @setup_chat_box()
+    @setup_min_chat_box()
+

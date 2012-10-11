@@ -26,6 +26,6 @@
       if user.user_name != current_user
         .chat_row
           img(src="/images/default_profile_min.png")
-          img(src="/images/online_#{user.online}.png")
+          img.online_status(src="/images/online_#{user.online}.png")
           li
             =user.user_name

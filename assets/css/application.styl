@@ -27,8 +27,6 @@ generic_font_family()
 .form_header
   font-size form_header_size
 
-
-
 .blue
   color #07A4C7
 
@@ -150,14 +148,10 @@ label
   padding 15px
   position relative
 
-  li
-    //
-  a
-    // font-size 80%
 .chatroom_header
   margin-bottom 15px
   img
-    margin-right 5px
+    margin 0 5px 0 0
 
 
 .chat_row
@@ -168,6 +162,13 @@ label
   height 48px
   position relative
   width 100%
+
+  &:hover
+    background-color lighten(#333, 70)
+    cursor pointer
+    -moz-box-shadow: 2px 2px 10px #999;
+    -webkit-box-shadow: 2px 2px 10px #999;
+    box-shadow: 2px 2px 10px #999;
 
   li
     position absolute
@@ -201,7 +202,6 @@ label
   background rgb(249,249,249)
   border_radius 8px
   margin-bottom 25px
-  // position relative
   padding 15px
 
 
@@ -307,3 +307,80 @@ label
 
   &:nth-of-type(3)
     margin-top 30px
+
+// Chat Box
+
+.chat-box
+  background-color white
+  height 345px
+  position fixed
+  bottom 0
+  right 0
+  z-index 3000000000
+
+.chat-box-header
+  border-bottom 1px solid gray
+  height 32px
+  position relative
+  width 260px
+
+.chat-box-header img:nth-of-type(1)
+  left 5px
+  position absolute
+  top 7px
+
+.chat-box-header img:nth-of-type(2)
+  cursor pointer
+  position absolute
+  right 25px
+  top 7px
+
+.chat-box-header img:nth-of-type(3)
+  cursor pointer
+  position absolute
+  right 5px
+  top 7px
+
+.chat-box-header p
+  left 30px
+  position absolute
+  top 4px
+
+.chat-box textarea
+  bottom 0
+  height 80px
+  left 9px
+  position absolute
+  width 240px
+
+.minimized-chat-box
+  background-color white
+  bottom 0
+  display none
+  height 32px
+  position fixed
+  right 0
+  width 258px
+  z-index 3000000000
+
+.minimized-chat-box-header p
+  left 30px
+  position absolute
+  top 4px
+
+.minimized-chat-box-header img:nth-of-type(1)
+  left 5px
+  position absolute
+  top 7px
+
+.minimized-chat-box-header img:nth-of-type(2)
+  cursor pointer
+  position absolute
+  right 25px
+  top 7px
+
+.minimized-chat-box-header img:nth-of-type(3)
+  cursor pointer
+  position absolute
+  right 5px
+  top 7px

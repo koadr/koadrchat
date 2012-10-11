@@ -29,7 +29,7 @@ User = (mongoose, db) ->
 
   UserSchema.statics.find_online_users = (callback) ->
     @find({online: true})
-    .select('user_name online email messages')
+    .select('user_name online email')
     .exec(callback)
 
   UserSchema.statics.find_offline_users = (callback) ->

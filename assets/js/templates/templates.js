@@ -225,6 +225,25 @@ buf.push('</div>');
 }
 return buf.join("");
 }
+jade.templates["chat_box"] = function(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<div class="chat-box"><div class="chat-box-header"><p>');
+var __val__ = current_user
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><img');
+buf.push(attrs({ 'src':(online_path) }, {"src":true}));
+buf.push('/><img src="images/minimize_icon.png" alt="minimize" class="toggle_chat_box"/><img src="images/close_icon.png" alt="close" class="exit_chat"/></div><textarea type="text" name="message"></textarea></div><div class="minimized-chat-box"><div class="minimized-chat-box-header"><p>');
+var __val__ = current_user
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><img');
+buf.push(attrs({ 'src':(online_path) }, {"src":true}));
+buf.push('/><img src="images/minimize_icon.png" alt="minimize" class="toggle_chat_box"/><img src="images/close_icon.png" alt="close" class="exit_chat"/></div></div>');
+}
+return buf.join("");
+}
 jade.templates["users_index"] = function(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -276,7 +295,7 @@ buf.push('</a></div>');
 if ( user.user_name != current_user)
 {
 buf.push('<div class="chat_row"><img src="/images/default_profile_min.png"/><img');
-buf.push(attrs({ 'src':("/images/online_" + (user.online) + ".png") }, {"src":true}));
+buf.push(attrs({ 'src':("/images/online_" + (user.online) + ".png"), "class": ('online_status') }, {"src":true}));
 buf.push('/><li>');
 var __val__ = user.user_name
 buf.push(escape(null == __val__ ? "" : __val__));
@@ -290,7 +309,7 @@ buf.push('</li></div>');
 if ( user.user_name != current_user)
 {
 buf.push('<div class="chat_row"><img src="/images/default_profile_min.png"/><img');
-buf.push(attrs({ 'src':("/images/online_" + (user.online) + ".png") }, {"src":true}));
+buf.push(attrs({ 'src':("/images/online_" + (user.online) + ".png"), "class": ('online_status') }, {"src":true}));
 buf.push('/><li>');
 var __val__ = user.user_name
 buf.push(escape(null == __val__ ? "" : __val__));
