@@ -11,7 +11,7 @@ Topic          = AllModels.Topic
 UserFactory    = require("../factories/user-factory.coffee")(mongoose, db)
 MessageFactory = require("../factories/message-factory.coffee")(mongoose, db)
 TopicFactory = require("../factories/topic-factory.coffee")(mongoose, db)
-
+obj = require("../../apps/interact/mapreduce.coffee").topics_obj
 describe 'User', ->
 
   before (done) ->
@@ -114,8 +114,9 @@ describe 'User', ->
       topic.save (err, topic) ->
         user.messages[0].topics.push topic
         message.save (err, message) ->
-          Message.pop_topics_with_messages (err, msg) ->
-            expect(msg[0].topics[0].name).to.eql topic.name
+          Topic.mapReduce obj, (err, topic, stats) ->
+            expect(err).to.be null
+            expect(topic._id).to.eql user.messages[0].topics[0].name
             done()
     afterEach (done) ->
       if db.collections['messages']
