@@ -263,6 +263,16 @@ describe 'interact' , ->
           expect(user[0].timestamp.toString()).not.to.equal(timestamp)
           expect(err).to.be null
           done()
+    it "should not throw error if a user enters a message without a topic", (done) ->
+      options =
+        uri: "http:" + "//localhost:#{app.get('port')}/api/users/"
+        body:
+          user_name: user.user_name
+          messages: [{content: "Ain't no topic bro!"}]
+        json: true
+      request.post options , (err, _response, _body) ->
+        expect(err).to.be null
+        done()
 
   describe 'GET api/topics' , ->
     topic  = null ; body = null ; user = null;
