@@ -42,12 +42,12 @@ logout = ->
 
 create = (content = 'foo' , user_name) ->
   options =
-        uri: "http:" + "//localhost:#{app.get('port')}/api/users/"
-        body:
-          user_name: user_name
-          messages: [{content: content, topic_names:[
-            "Foo"]}]
-        json: true
+    uri: "http:" + "//localhost:#{app.get('port')}/api/users/"
+    body:
+      user_name: user_name
+      messages: [{content: content, topic_names:[
+        "Foo"]}]
+    json: true
 
 describe 'interact' , ->
   before (done) ->
@@ -63,6 +63,20 @@ describe 'interact' , ->
         done()
     it "has title", ->
       assert.hasTag body, '//title', "Koadrchat"
+
+  describe 'GET /users', ->
+    [ body, response, user ] = [ null , null , null ]
+    beforeEach (done) ->
+      user = UserFactory.build 'user'
+      user.save()
+      options = inputs_for_login_form "#{user.user_name}" , 'foobar'
+      request.post options, (ignoreErr, postResponse, postResponseBody) ->
+        request.get "http:" + postResponse.headers.location, (err, _response, _body) ->
+          [body, response] = [_body, _response]
+          done()
+    it "should not return an error if there are no current topics.", ->
+      request "http://localhost:#{app.get('port')}/users" , (err, _response, _body)->
+        expect(err).to.be null
 
   describe 'PUT /users/:id' , ->
     describe 'NOT logged in' , ->
@@ -95,15 +109,15 @@ describe 'interact' , ->
           request.get "http:" + postResponse.headers.location, (err, _response, _body) ->
             [body, response] = [_body, _response]
             done()
-      # it "update states for user when user is logged in", (done) ->
-      #   update_options = inputs_for_update_form 'foofi@foo.com', '123456' , '123456' , user.user_name
-      #   hash           = 'RcJX1gmkUbQm8JWVHy+aEBfTC/iTCFY8+CGkoy5r8L/mV/MybAKPRX7heoSNF4+/a4Gv50sQmzwrB8qtB4srScxk91rb3X05VlpEvQ2FoOBUHTVHIHTp5SIagqSQs6Cps4cvdw73RzTHPu+DL41iGCvHdr0JpGwicPDx85WLtoI='
-      #   request.put update_options, (upErr, upPostResponse, upPostResponseBody) ->
-      #     request.get "http:" + upPostResponse.headers.location, (err, _response, _body) ->
-      #       User.findById user._id , (err, user) ->
-      #         expect(user.email).to.eql 'foofi@foo.com'
-      #         expect(user.hash).to.not.eql hash
-      #         done()
+      it "update states for user when user is logged in", (done) ->
+        update_options = inputs_for_update_form 'foofi@foo.com', '123456' , '123456' , user.user_name
+        hash           = 'RcJX1gmkUbQm8JWVHy+aEBfTC/iTCFY8+CGkoy5r8L/mV/MybAKPRX7heoSNF4+/a4Gv50sQmzwrB8qtB4srScxk91rb3X05VlpEvQ2FoOBUHTVHIHTp5SIagqSQs6Cps4cvdw73RzTHPu+DL41iGCvHdr0JpGwicPDx85WLtoI='
+        request.put update_options, (upErr, upPostResponse, upPostResponseBody) ->
+          request.get "http:" + upPostResponse.headers.location, (err, _response, _body) ->
+            User.findById user._id , (err, user) ->
+              expect(user.email).to.eql 'foofi@foo.com'
+              expect(user.hash).to.not.eql hash
+              done()
 
 
   describe 'GET /users/:id/', ->

@@ -58,7 +58,7 @@ class Interact.Views.UsersIndex extends Backbone.View
     if char_remaining < 15
       $('.char_count').html "<span class='red'>#{char_remaining}</span>"
     else
-     $('.char_count').html "<span class='blue'>#{char_remaining}</span>"
+      $('.char_count').html "<span class='blue'>#{char_remaining}</span>"
 
   setup_chat_box: () ->
     new_cbox_placement = null

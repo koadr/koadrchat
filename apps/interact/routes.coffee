@@ -11,6 +11,17 @@ routes = (app, mongoose, db) ->
   User      = AllModels.User
   Topic     = AllModels.Topic
 
+  add_render_users = (res, recent_users, topics = '')->
+    User
+      .find()
+      .select('user_name online')
+      .exec (err, online_users) ->
+        res.render "#{ __dirname}/views/users/index",
+          title: 'Koadrchat - Talk Away'
+          recent_users: recent_users
+          online_users: online_users
+          topics: topics
+
   get_session_name = (req)->
     if req.session.currentUser?
       req.session.currentUser.user_name
@@ -56,6 +67,7 @@ routes = (app, mongoose, db) ->
     # List all users
     app.get '/', authenticate, (req, res) ->
       User.show_recent_users (err, recent_users) ->
+<<<<<<< HEAD
           User
             .find()
             .select('user_name online')
@@ -65,6 +77,14 @@ routes = (app, mongoose, db) ->
                  recent_users: recent_users
                   online_users: online_users
 
+=======
+        Topic.mapReduce obj, (err, topic, stats) ->
+          if topic
+            topic.find().limit(5).sort('-value').exec (err, topics) ->
+              add_render_users res, recent_users, topics
+          else
+            add_render_users res, recent_users
+>>>>>>> e382719bc9515bfe2ac6a25fc0849f51fa610cab
 
     # Edit User
     app.get '/:id/edit' , (req, res) ->
