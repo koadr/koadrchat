@@ -15,4 +15,4 @@ class Interact.Views.ChatBox extends Backbone.View
 
   toggle_chat_box: (event) ->
     @$(".chat-box").toggle()
-    $(".minimized-chat-box").toggle()
+    @$(".minimized-chat-box").toggle()

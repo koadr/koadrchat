@@ -22,6 +22,17 @@ routes = (app, mongoose, db) ->
           online_users: online_users
           topics: topics
 
+  save_new_user_info = (req, res, user, topic = '')->
+    user.messages      = req.body.messages
+    user.timestamp     = new Date()
+    last_message_attrs = user.messages[req.body.messages.length - 1]
+    message            = new Message last_message_attrs
+    if topic != ''
+      message.topics.push topic unless message.topics[topic._id]
+    message.save (err, msgs) ->
+      user.save (err, usr) ->
+        res.json user
+
   get_session_name = (req)->
     if req.session.currentUser?
       req.session.currentUser.user_name
@@ -136,19 +147,15 @@ routes = (app, mongoose, db) ->
         if !(req.body.user_name == user.user_name)
           req.flash 'error', 'Please do not try to alter the content of other users.'
           return res.redirect "/users/#{user.user_name}"
-        for topic_name in message.topic_names
-          topic           = new Topic
-          topic.name      = topic_name
-          topic.timestamp = new Date()
-          topic.save (err, topic) ->
-            user.messages      = req.body.messages
-            user.timestamp     = new Date()
-            last_message_attrs = user.messages[req.body.messages.length - 1]
-            message            = new Message last_message_attrs
-            message.topics.push topic unless message.topics[topic._id]
-            message.save (err, msgs) ->
-              user.save (err, usr) ->
-                res.json user
+        if message.topic_names?
+          for topic_name in message.topic_names
+            topic                = new Topic
+            topic.name           = topic_name
+            topic.timestamp      = new Date()
+            topic.save (err, topic) ->
+              save_new_user_info req, res, user, topic
+        else
+          save_new_user_info req, res, user
 
     app.get '/users/:id' ,(req, res) ->
        User
