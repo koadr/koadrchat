@@ -5,6 +5,7 @@ class Interact.Views.UsersIndex extends Backbone.View
   events:
     'focus #message_box' : 'show_txt_msg_box'
     'click .share_msg_btn': 'add_message'
+    'keyup #new_msg': 'char_countdown'
 
   initialize: (collection, user, helper, online_users) ->
     @collection      = collection
