@@ -18,4 +18,6 @@ window.Interact =
     $("#trending_topics").html(topics_page.render().el)
 
 $(document).ready ->
-  Interact.init()
+  regex = /users(\/)?([a-zA-Z]+(\/)?)?$/
+  if regex.test location.pathname
+    Interact.init()

@@ -18,7 +18,8 @@
     "stylus": "~0.29.0",
     "connect-mongo": "~0.1.9",
     "socket.io": "~0.9.10",
-    "validator": "~0.4.11"
+    "validator": "~0.4.11",
+    "cookie": "0.0.4"
   },
   "devDependencies": {
     "mocha": "~1.4.0",

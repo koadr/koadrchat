@@ -9,9 +9,11 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , flash = require('connect-flash')
+  , sessionStore = new express.session.MemoryStore
   , MongoStore = require('connect-mongo')(express);
 
 require('express-namespace');
+
 
 // Database Setup
 var mongoose = require('mongoose');
@@ -41,6 +43,11 @@ var settings = {
   secret: 'NRVe8NxGkgFUQdbTGcauymqW'
 };
 
+var store = new MongoStore({
+      db: settings.db
+    });
+
+
 app.configure(function(){
   app.set('port', process.env.PORT || 3000);
   app.set('views', __dirname + '/views');
@@ -51,10 +58,9 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(express.cookieParser('NRVe8NxGkgFUQdbTGcauymqW'));
   app.use(express.session({
+    key: 'express.sid',
     secret: settings.secret,
-    store: new MongoStore({
-      db: settings.db
-    })
+    store:  sessionStore
   }));
   app.use(flash());
   app.use(require('connect-assets')());
@@ -77,7 +83,6 @@ app.configure('production', function () {
   app.use(express.errorHandler());
 });
 
-
 // Global helpers
 require('./apps/helpers')(app);
 
@@ -91,4 +96,4 @@ server = http.createServer(app).listen(app.get('port'), function(){
 });
 
 // Socket-Io
-require('./apps/socket-io')(app, server);
+require('./apps/socket-io')(app, server, mongoose, db, sessionStore);

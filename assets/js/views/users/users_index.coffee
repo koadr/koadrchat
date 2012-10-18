@@ -14,10 +14,40 @@ class Interact.Views.UsersIndex extends Backbone.View
     @helper          = helper
     @online_users    = online_users
     @collection.on 'change' , @render , this
+    @chat            = io.connect("http://localhost:3000/")
+    @chat.on "connect", @notify_online, this
+    @chat.on "initial_online_users", @show_initial_online_users, this
+    @chat.on "show_online_user", @show_online_user , this
+    @chat.on "exit", @disconnect_user, this
 
   render: ->
     $(@el).html(@template(recent_users: @collection, current_user: @user, helper: @helper, online_users: @online_users))
     this
+
+  log_chat_message = (message, type) ->
+    li = $("<li />").text(message)
+    if type is "system"
+      li.css "font-weight": "bold"
+    else if type is "leave"
+      li.css
+        "font-weight": "bold"
+        color: "#F00"
+
+    $("#chat_log").append li
+
+  notify_online: =>
+    @chat.emit "online",
+      user: @user
+
+  show_initial_online_users: (data)=>
+    for user in data.users
+      @$("#" + user + " img:nth-of-type(2)").attr 'src', "/images/online_true.png"
+
+  show_online_user: (data) =>
+    @$("#" + data.user + " img:nth-of-type(2)").attr 'src', "/images/online_true.png"
+
+  disconnect_user: (data) =>
+    @$("#" + data.user + " img:nth-of-type(2)").attr 'src', "/images/online_false.png"
 
   show_txt_msg_box: (event) ->
     event.preventDefault()
@@ -60,15 +90,12 @@ class Interact.Views.UsersIndex extends Backbone.View
     else
       $('.char_count').html "<span class='blue'>#{char_remaining}</span>"
 
-  user_chat_box_open: ()->
+  user_chat_box_open: (event)->
     $users_chat       = $(".chat-box").find 'p'
     $users_chat_names = $users_chat.map (key, value)->
-      value.innerText
+      value.textContent
     $user_chat_box    = @$(event.target).find 'li'
     $user_name        = $user_chat_box.html()
-    console.log $users_chat_names
-    console.log $user_name
-    console.log $.inArray($user_name, $users_chat_names)
     return $.inArray($user_name, $users_chat_names)
 
   setup_chat_box: () ->
@@ -77,7 +104,6 @@ class Interact.Views.UsersIndex extends Backbone.View
     $chat_box_width    = $chat_box.width()
     $chat_box_pos      = $chat_box.css('right').replace("px", "")
     new_cbox_placement = Number($chat_box_pos) + $chat_box_width + 10
-    # return false if !@disable_if_user_chat_box_open()
     if @chat_box_pos
       num_chat_boxes = $("#chat_rooms > div").length
       # Prevents the second chat_box from starting wrongfully in the third position.
@@ -92,11 +118,11 @@ class Interact.Views.UsersIndex extends Backbone.View
     $chat_box_pos      = $chat_box.css('right').replace("px", "")
     $("#chat_rooms > div:last-child .minimized-chat-box").css 'right' , Number($chat_box_pos)
 
-  open_chat_box: () ->
-    $current_user      = @$(event.target).find('li')[0].innerText
+  open_chat_box: (event) ->
+    $messaging_user    = @$(event.target).find('li')[0].textContent
     $online_url_path   = @$(event.target).find('.online_status')[0].src
-    $chat_box_view     = new Interact.Views.ChatBox($current_user, $online_url_path)
-    return if @user_chat_box_open() > -1
+    $chat_box_view     = new Interact.Views.ChatBox($messaging_user, $online_url_path)
+    return if @user_chat_box_open(event) > -1
     $("#chat_rooms").append($chat_box_view.render().el)
     @setup_chat_box()
     @setup_min_chat_box()
