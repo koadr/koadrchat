@@ -1,6 +1,6 @@
 class Interact.Views.TopicsIndex extends Backbone.View
   tagName: 'div'
-  attributes: {class: '.four columns'}
+  attributes: {class: 'two columns'}
   template: jade.templates["topics_index"]
 
   initialize: (collection, helper) ->

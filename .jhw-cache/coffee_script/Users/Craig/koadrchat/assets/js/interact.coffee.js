@@ -17,7 +17,7 @@
       this.topics_collection.reset($('#bootstrapped_topics').data('topics'));
       users_page = new Interact.Views.UsersIndex(this.users_collection, this.user, this.user_helper, this.online_users);
       topics_page = new Interact.Views.TopicsIndex(this.topics_collection, this.topic_helper);
-      $("#user_enter").html(users_page.render().el);
+      $("#user_show").html(users_page.render().el);
       return $("#trending_topics").html(topics_page.render().el);
     }
   };

@@ -1,0 +1,11 @@
+.chatroom
+  .chatroom_header
+    img(src="/images/online_true.png")
+    a(href="#")= "@" + current_user
+  for user in online_users
+    if user.user_name != current_user
+      .chat_row(id=user.user_name)
+        img(src="/images/default_profile_min.png")
+        img.online_status(src="/images/online_false.png")
+        li
+          =user.user_name

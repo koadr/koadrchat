@@ -247,45 +247,12 @@ buf.push('/><img src="images/minimize_icon.png" alt="minimize" class="toggle_cha
 }
 return buf.join("");
 }
-jade.templates["users_index"] = function(locals, attrs, escape, rethrow, merge) {
+jade.templates["chat_users"] = function(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="six columns"><div class="new_message"><img src="/images/default_profile.png"/><input id="message_box" type="text" placeholder="Share what\'s new..." class="nine"/><form id="new_msg_text_box"><li><a href="">');
-var __val__ = "@" + current_user
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a></li><p>View Your Profile</p><p class="char_count">150</p><textarea id="new_msg" type="text" placeholder="Share what\'s new..." class="nine"></textarea><a href="#" class="tiny share_msg_btn secondary radius button">Share</a></form></div>');
-// iterate recent_users.models
-;(function(){
-  if ('number' == typeof recent_users.models.length) {
-    for (var $index = 0, $$l = recent_users.models.length; $index < $$l; $index++) {
-      var user = recent_users.models[$index];
-
-buf.push('<div class="latest_messages"><img src="/images/default_profile.png" class="mini_profile_pic"/><a href="#">');
-var __val__ = "@" + user.get('user_name')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a><p>');
-var __val__ = helper.get_recent_msg(user)
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p></div>');
-    }
-  } else {
-    for (var $index in recent_users.models) {
-      var user = recent_users.models[$index];
-
-buf.push('<div class="latest_messages"><img src="/images/default_profile.png" class="mini_profile_pic"/><a href="#">');
-var __val__ = "@" + user.get('user_name')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a><p>');
-var __val__ = helper.get_recent_msg(user)
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p></div>');
-   }
-  }
-}).call(this);
-
-buf.push('</div><div class="four columns end"><div class="chatroom"><div class="chatroom_header"><img src="/images/online_true.png"/><a href="#">');
+buf.push('<div class="chatroom"><div class="chatroom_header"><img src="/images/online_true.png"/><a href="#">');
 var __val__ = "@" + current_user
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</a></div>');
@@ -322,7 +289,48 @@ buf.push('</li></div>');
   }
 }).call(this);
 
-buf.push('</div></div>');
+buf.push('</div>');
+}
+return buf.join("");
+}
+jade.templates["users_index"] = function(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<div class="new_message"><img src="/images/default_profile.png"/><input id="message_box" type="text" placeholder="Share what\'s new..." class="nine"/><form id="new_msg_text_box"><li><a href="">');
+var __val__ = "@" + current_user
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a></li><p>View Your Profile</p><p class="char_count">150</p><textarea id="new_msg" type="text" placeholder="Share what\'s new..." class="nine"></textarea><a href="#" class="tiny share_msg_btn secondary radius button">Share</a></form></div>');
+// iterate recent_users.models
+;(function(){
+  if ('number' == typeof recent_users.models.length) {
+    for (var $index = 0, $$l = recent_users.models.length; $index < $$l; $index++) {
+      var user = recent_users.models[$index];
+
+buf.push('<div class="latest_messages"><img src="/images/default_profile.png" class="mini_profile_pic"/><a href="#">');
+var __val__ = "@" + user.get('user_name')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a><p>');
+var __val__ = helper.get_recent_msg(user)
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p></div>');
+    }
+  } else {
+    for (var $index in recent_users.models) {
+      var user = recent_users.models[$index];
+
+buf.push('<div class="latest_messages"><img src="/images/default_profile.png" class="mini_profile_pic"/><a href="#">');
+var __val__ = "@" + user.get('user_name')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a><p>');
+var __val__ = helper.get_recent_msg(user)
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p></div>');
+   }
+  }
+}).call(this);
+
 }
 return buf.join("");
 }

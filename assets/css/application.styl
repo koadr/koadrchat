@@ -140,8 +140,8 @@ label
 // Users Message box
 
 .chatroom
-
   background-color #F9F9F9
+  border 1px solid #464747
   border_radius 8px
   color rgb(119, 119, 119)
   font-family "Helvetica Neue",Arial,sans-serif
@@ -155,10 +155,10 @@ label
 
 
 .chat_row
-  border-bottom 1px solid gray
-  border-left 1px solid gray
-  border-right 1px solid gray
-  border-top 1px solid gray
+  border-bottom 1px solid #E5E5E5
+  border-left 1px solid #E5E5E5
+  border-right 1px solid #E5E5E5
+  border-top 1px solid #E5E5E5
   height 48px
   position relative
   width 100%
@@ -166,9 +166,9 @@ label
   &:hover
     background-color lighten(#333, 70)
     cursor pointer
-    -moz-box-shadow: 2px 2px 10px #999;
-    -webkit-box-shadow: 2px 2px 10px #999;
-    box-shadow: 2px 2px 10px #999;
+    -moz-box-shadow: 1px 1px 8px #999;
+    -webkit-box-shadow: 1px 1px 8px #999;
+    box-shadow: 1px 1px 8px #999;
 
   li
     position absolute
@@ -178,6 +178,8 @@ label
   img:nth-of-type(1)
     position absolute
     top 7px
+    padding-left 4px
+    padding-top 1px
 
   img:nth-of-type(2)
     position absolute
@@ -191,23 +193,34 @@ label
   position relative
   background-color #F9F9F9
   border_radius 8px
+  border 1px solid #464747
   padding 5px
 
 
 .trending_box li
   padding 2px
+  color #2BA6CB
 
 .shared_config_for_message_box
   background-color #F9F9F9
   background rgb(249,249,249)
   border_radius 8px
+  border 1px solid #464747
   margin-bottom 25px
   padding 15px
+
+
+div.new_message
+  height 78px
+  outline none
+  border 1px solid #464747
+
 
 
 .new_message
   @extend .shared_config_for_message_box
   height 78px
+  border 1px solid #464747
 
   img
     border_radius 4px
@@ -225,6 +238,9 @@ label
     float left
     height 80px
     margin 10px 0 10px 63px
+
+  outline none
+  border 1px solid #DDDDDD
 
   #new_msg_text_box
     display none
@@ -250,6 +266,15 @@ label
       float left
       margin-left 63px
 
+
+input[type=text]:focus, textarea:focus
+  @include box-shadow(0 0 8px rgba(81, 203, 238, 1))
+  border 1px solid rgba(81, 203, 238, 1)
+
+input[type=text], textarea
+  @include transition(all 0.30s ease-in-out)
+  outline none
+  border 1px solid #DDDDDD
 
 .latest_messages
   @extend .shared_config_for_message_box
@@ -278,8 +303,14 @@ label
 
 .trending_header
   font-size 16px
-  color #383838
+  color #464747
   font-weight 600
+  border-bottom 1px solid #E5E5E5
+  height 25px
+  position relative
+  width 100%
+  padding 2px
+  box-shadow 0 1px 0 rgba(101, 101, 101, .1)
 
 
 .online_users
@@ -314,15 +345,20 @@ label
   background-color white
   height 345px
   position fixed
+  border 1px solid #464747
   bottom 0
   right 0
   z-index 3000000000
 
 .chat-box-header
-  border-bottom 1px solid gray
+  border-bottom 1px solid grey
+  border-bottom-width 1px
+  border-bottom-style solid
+  box-shodow: 0 2px 0 rgba(101, 101, 101, 0.1)
   height 32px
   position relative
   width 260px
+  background #f1f1f1
 
 .chat-box-header img:nth-of-type(1)
   left 5px

@@ -1,31 +1,18 @@
-.six.columns
-  .new_message
-    img(src="/images/default_profile.png")
-    input.nine#message_box(type="text" , placeholder="Share what's new...")
-    form#new_msg_text_box
-      li
-        a(href="")
-          = "@" + current_user
-      p View Your Profile
-      p.char_count 150
-      textarea.nine#new_msg(type="text" , placeholder="Share what's new...")
-      a.tiny.share_msg_btn.secondary.radius.button(href="#") Share
-  for user in recent_users.models
-    .latest_messages
-      img.mini_profile_pic(src="/images/default_profile.png")
-      a(href='#')
-        = "@" + user.get('user_name')
-      p
-        = helper.get_recent_msg(user)
-.four.columns.end
-  .chatroom
-    .chatroom_header
-      img(src="/images/online_true.png")
-      a(href="#")= "@" + current_user
-    for user in online_users
-      if user.user_name != current_user
-        .chat_row(id=user.user_name)
-          img(src="/images/default_profile_min.png")
-          img.online_status(src="/images/online_false.png")
-          li
-            =user.user_name
+.new_message
+  img(src="/images/default_profile.png")
+  input.nine#message_box(type="text" , placeholder="Share what's new...")
+  form#new_msg_text_box
+    li
+      a(href="")
+        = "@" + current_user
+    p View Your Profile
+    p.char_count 150
+    textarea.nine#new_msg(type="text" , placeholder="Share what's new...")
+    a.tiny.share_msg_btn.secondary.radius.button(href="#") Share
+for user in recent_users.models
+  .latest_messages
+    img.mini_profile_pic(src="/images/default_profile.png")
+    a(href='#')
+      = "@" + user.get('user_name')
+    p
+      = helper.get_recent_msg(user)

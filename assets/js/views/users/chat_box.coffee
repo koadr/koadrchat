@@ -1,17 +1,17 @@
 class Interact.Views.ChatBox extends Backbone.View
   template: jade.templates["chat_box"]
 
-  events :
-    'click .toggle_chat_box': 'toggle_chat_box'
+  events:
     'keypress #chat_message': 'chat_message'
 
+  initialize: (current_user, online_path, chat) ->
+    @user         = current_user
+    @online_path  = online_path
+    @chat         = chat
 
-  initialize: (intent_user, online_path) ->
-    @user             = intent_user
-    @online_path      = online_path
 
   render: ->
-    $(@el).html(@template(current_user: @user, online_path: @online_path))
+    $(@el).html(@template(current_user: @user, online_users: @online_users, online_path: @online_path))
     this
 
   log_chat_message = (message, type) ->
@@ -25,13 +25,11 @@ class Interact.Views.ChatBox extends Backbone.View
 
     @$("#chat_log").append li
 
+
   chat_message: (event)->
     if (event.which) == 13
-      @chat.emit('chat',
-        message: $('#chat_message').val()
-      )
-      $('#chat_message').val('')
+      @chat.emit 'setup_chat',
+        user_to_chat: @user
 
-  toggle_chat_box: (event) ->
-    @$(".chat-box").toggle()
-    @$(".minimized-chat-box").toggle()
+      # $('#chat_message').val('')
+      # $('#chat_message').val()

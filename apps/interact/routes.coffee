@@ -85,6 +85,7 @@ routes = (app, mongoose, db) ->
           else
             add_render_users res, recent_users
 
+
     # Edit User
     app.get '/:id/edit' , (req, res) ->
       User.find { user_name: req.params.id } , (err, user_arr) ->

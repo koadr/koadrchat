@@ -3,8 +3,10 @@ extends ../../../../views/layout
 block content
   .twelve.columns
     #chat_rooms
-    #user_enter
-    #trending_topics
+    .row
+      #user_show
+      #trending_topics
+      #chat_app
   #bootstrapped_recent_users(data-recent_users="#{JSON.stringify(recent_users)}")
   #bootstrapped_online_users(data-online_users="#{JSON.stringify(online_users)}")
   #bootstrapped_topics(data-topics="#{JSON.stringify(topics)}")
