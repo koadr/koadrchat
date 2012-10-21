@@ -204,7 +204,7 @@ buf.push('<div class="trending_box"><h3 class="capitalize trending_header">Trend
     for (var $index = 0, $$l = trending_topics.models.length; $index < $$l; $index++) {
       var topic = trending_topics.models[$index];
 
-buf.push('<li>');
+buf.push('<li><img src="/images/arrow_up.png"/>');
 var __val__ = topic.get('_id')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</li>');
@@ -213,7 +213,7 @@ buf.push('</li>');
     for (var $index in trending_topics.models) {
       var topic = trending_topics.models[$index];
 
-buf.push('<li>');
+buf.push('<li><img src="/images/arrow_up.png"/>');
 var __val__ = topic.get('_id')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</li>');
