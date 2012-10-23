@@ -7,14 +7,21 @@ class Interact.Views.ChatUsers extends Backbone.View
     'click .toggle_chat_box': 'toggle_chat_box'
 
   initialize: (user, online_users) ->
-    @user         = user
-    @online_users = online_users
-    @chat         = io.connect("http://localhost:3000/")
+    @user            = user
+    @online_users    = online_users
+    @chat            = io.connect("http://localhost:3000/")
+    @room1           = io.connect("http://localhost:3000/room1")
+    @room2           = io.connect("http://localhost:3000/room2")
+    @room3           = io.connect("http://localhost:3000/room3")
+    @room4           = io.connect("http://localhost:3000/room4")
     @chat.on "connect", @notify_online, this
     @chat.on "initial_online_users", @show_initial_online_users, this
     @chat.on "show_online_user", @show_online_user , this
     @chat.on "exit", @disconnect_user, this
-    @chat.on "client_connect", @chat_room_connect, this
+    @room1.on "message_log", @log_chat, this
+    @room2.on "message_log", @log_chat, this
+    @room3.on "message_log", @log_chat, this
+    @room4.on "message_log", @log_chat, this
 
   render: ->
     $(@el).html(@template(current_user: @user, online_users: @online_users))
@@ -37,6 +44,10 @@ class Interact.Views.ChatUsers extends Backbone.View
   toggle_chat_box: (event) ->
     @$(".chat-box").toggle()
     @$(".minimized-chat-box").toggle()
+
+  log_chat_message: (message, type, user_init_conv) ->
+    $message_log_view  = new Interact.Views.MessageLog(@user, message, user_init_conv)
+    $("#chat_log").append($message_log_view.render().el)
 
   user_chat_box_open: (event)->
     $users_chat       = $(".chat-box").find 'p'
@@ -69,13 +80,12 @@ class Interact.Views.ChatUsers extends Backbone.View
   open_chat_box: (event) ->
     $messaging_user    = @$(event.target).find('li')[0].textContent
     $online_url_path   = @$(event.target).find('.online_status')[0].src
-    $chat_box_view     = new Interact.Views.ChatBox($messaging_user, $online_url_path, @chat)
+    $chat_box_view     = new Interact.Views.ChatBox($messaging_user, @user, $online_url_path, @chat, @room1, @room2, @room3, @room4)
     return if @user_chat_box_open(event) > -1
     $("#chat_rooms").append($chat_box_view.render().el)
     @setup_chat_box()
     @setup_min_chat_box()
 
-  chat_room_connect: (data) ->
-    connect_path = "#{data.connection_path}"
-    for user in connect_path.split '-'
-      $("#" + user).trigger 'click'
+  log_chat: (data)=>
+    $("#" + data.user_init_conv).trigger 'click'
+    @log_chat_message(data.message, 'normal', data.user_init_conv)

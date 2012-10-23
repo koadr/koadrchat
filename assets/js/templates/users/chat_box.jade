@@ -1,19 +1,20 @@
 .chat-box
   .chat-box-header
     p
-      = current_user
+      = messaging_user
     img(src=online_path)
     img.toggle_chat_box(src="images/minimize_icon.png", alt="minimize")
     img.exit_chat(src="images/close_icon.png", alt="close")
   #chat_log
-    p.default_offline_text
-      = current_user + " is offline and cannot receive messages right now."
+    if !user_online
+      p.default_offline_text
+        = messaging_user + " is offline and cannot receive messages right now."
 
   textarea#chat_message(type="text", name="message")
 .minimized-chat-box
   .minimized-chat-box-header
     p
-      = current_user
+      = messaging_user
     img(src=online_path)
     img.toggle_chat_box(src="images/minimize_icon.png", alt="minimize")
     img.exit_chat(src="images/close_icon.png", alt="close")

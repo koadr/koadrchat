@@ -231,15 +231,20 @@ var buf = [];
 with (locals || {}) {
 var interp;
 buf.push('<div class="chat-box"><div class="chat-box-header"><p>');
-var __val__ = current_user
+var __val__ = messaging_user
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><img');
 buf.push(attrs({ 'src':(online_path) }, {"src":true}));
-buf.push('/><img src="images/minimize_icon.png" alt="minimize" class="toggle_chat_box"/><img src="images/close_icon.png" alt="close" class="exit_chat"/></div><div id="chat_log"><p class="default_offline_text">');
-var __val__ = current_user + " is offline and cannot receive messages right now."
+buf.push('/><img src="images/minimize_icon.png" alt="minimize" class="toggle_chat_box"/><img src="images/close_icon.png" alt="close" class="exit_chat"/></div><div id="chat_log">');
+if ( !user_online)
+{
+buf.push('<p class="default_offline_text">');
+var __val__ = messaging_user + " is offline and cannot receive messages right now."
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p></div><textarea id="chat_message" type="text" name="message"></textarea></div><div class="minimized-chat-box"><div class="minimized-chat-box-header"><p>');
-var __val__ = current_user
+buf.push('</p>');
+}
+buf.push('</div><textarea id="chat_message" type="text" name="message"></textarea></div><div class="minimized-chat-box"><div class="minimized-chat-box-header"><p>');
+var __val__ = messaging_user
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><img');
 buf.push(attrs({ 'src':(online_path) }, {"src":true}));
@@ -290,6 +295,24 @@ buf.push('</li></div>');
 }).call(this);
 
 buf.push('</div>');
+}
+return buf.join("");
+}
+jade.templates["message_log"] = function(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<p>');
+var __val__ = user_init_conv
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p>');
+var __val__ = time
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><li>');
+var __val__ = message
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</li><hr/>');
 }
 return buf.join("");
 }

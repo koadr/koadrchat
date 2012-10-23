@@ -1,8 +1,10 @@
-encrypt   = require("../pass").hash
-salt_key  = null
-hash_key  = null
-check     = require('validator').check
-obj = require("./mapreduce.coffee").topics_obj
+encrypt    = require("../pass").hash
+salt_key   = null
+hash_key   = null
+check      = require('validator').check
+obj        = require("./mapreduce.coffee").topics_obj
+# chat_rooms = require("../socket-io.coffee")
+# console.log chat_rooms
 
 routes = (app, mongoose, db) ->
 
