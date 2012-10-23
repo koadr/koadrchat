@@ -2,4 +2,5 @@
   h3.capitalize.trending_header Trending on Koadr
   for topic in trending_topics.models
     li
+      img(src="/images/arrow_up.png")
       = topic.get('_id')

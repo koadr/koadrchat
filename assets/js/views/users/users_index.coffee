@@ -1,5 +1,5 @@
 class Interact.Views.UsersIndex extends Backbone.View
-  className: 'six columns'
+  className: 'eight columns'
   template: jade.templates["users_index"]
 
   events:
